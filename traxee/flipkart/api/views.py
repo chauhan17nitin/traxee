@@ -108,7 +108,7 @@ class IndexView(APIView):
             return Response({"mssg": value}, status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
-            return Response({"mssg": "USer is Logged Out"}, status=status.HTTP_200_OK)
+            return Response({"mssg": "User is Logged Out"}, status=status.HTTP_200_OK)
 
 class LogoutView(APIView):
 
@@ -122,15 +122,6 @@ class LogoutView(APIView):
         except Exception as e:
             print(e)
             return Response(status=status.HTTP_200_OK)
-
-class CheckView(APIView):
-    def get(self, request, format=None):
-        
-        id_token ="eyJhbGciOiJSUzI1NiIsImtpZCI6IjBiYWJiMjI0NDBkYTAzMmM1ZDAwNDJjZGFhOWQyODVjZjhkMjAyYzQiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiTml0aW4iLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdHJheGVlLXByLTMwMSIsImF1ZCI6InRyYXhlZS1wci0zMDEiLCJhdXRoX3RpbWUiOjE1ODc0MTY5MzYsInVzZXJfaWQiOiJ4TUdDeEp6M1RJYVREaXRRUHZxbUVtSk50WTQzIiwic3ViIjoieE1HQ3hKejNUSWFURGl0UVB2cW1FbUpOdFk0MyIsImlhdCI6MTU4NzQxNjkzNiwiZXhwIjoxNTg3NDIwNTM2LCJlbWFpbCI6Im5pdG5oYW4xOUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsibml0bmhhbjE5QGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.UY3fCtRiSqa4tLPuXMft4Mjl5CLPkN2McIS_bka-QyEIkQaH5nblHuwHjRHUUWDavixtRfD9CraVINvInTFjH2z3nYF1i_Q4pSE56Tjfani2Yd-VlrH-EDe7GhgJd_4tEmGseZ6j9ng730F7QY2DlmJguDh6YSShoadEMXalvuqJWg4ZFnV6jAIrTpVFINgkoBTYnFkrIF5L5LVg9Q3bUV8f8jqJLbBZ5o5xKuXl2etVVzGaDX2j7vrQ0NNEYlpTm6sbnitPYZZUHOn6VXL5qUcdrOVMf6O-EvacxWzcb4MAYjbJNO4i9LuTFxQfsgLVYCFh0uREEBIGWbeyzqMCxQ"
-        user = firebase_admin.auth.verify_id_token(id_token, app=None, check_revoked=True)
-        session_cookie = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjBwUjNXdyJ9.eyJpc3MiOiJodHRwczovL3Nlc3Npb24uZmlyZWJhc2UuZ29vZ2xlLmNvbS90cmF4ZWUtcHItMzAxIiwibmFtZSI6Ik5pdGluIiwiYXVkIjoidHJheGVlLXByLTMwMSIsImF1dGhfdGltZSI6MTU4NzQxNjkzNiwidXNlcl9pZCI6InhNR0N4SnozVElhVERpdFFQdnFtRW1KTnRZNDMiLCJzdWIiOiJ4TUdDeEp6M1RJYVREaXRRUHZxbUVtSk50WTQzIiwiaWF0IjoxNTg3NDE2OTM4LCJleHAiOjE1ODc4NDg5MzgsImVtYWlsIjoibml0bmhhbjE5QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJuaXRuaGFuMTlAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.B9LyHwJOmIbZ1XE68QbyzEJb69mXZ66IPkvWnbahfYA8Ub9OZV0AgSspKf-fae6f3weAlEdsdCKnxO_ZXI3VCSpwWY5uhtfSbP-7dZ0BZ0LLGpViosP8YDquKzI2D68OISDdf-kSLQdWOy06sOGiUKNNSUryrxv4MVdkqMu6HigCzkKMU7svPbR4BikccAwwKcgvmZmL-jlDTCgQifVf6v7LcPEDHAzaLkGZN3LfVaHB1lO_kghM2hWg_2BB_Nnqa7BotOZnrY4M_wojIp4II3UWv79naHfGo05yQK4-RL6reBfyl7OVJSOVK8iksNwelNB6bPTUX2fMs7MOEmB1Dg"
-        cookie = firebase_admin.auth.verify_session_cookie(session_cookie, check_revoked=True, app=None)
-        return Response({"mssg": user, "cookie": cookie}, status=status.HTTP_200_OK)\
 
 class SearchView(APIView):
 
@@ -147,11 +138,12 @@ class SearchView(APIView):
             soup = BeautifulSoup(page.content, 'html.parser')
 
             all_products = soup.find_all('div', class_='_1UoZlX')
-
+            products_list = []
             # there are two common style in which data can exists on a flipkart page
+            # so using if and else
             if len(all_products) != 0:
-                products = []
                 for product in all_products:
+
                     for a in product.find_all("a", href=True):
                         product_id = re.findall("\w?pid.*&lid", a['href'])
                         product_id = product_id[0][4: -4]
@@ -165,24 +157,56 @@ class SearchView(APIView):
                     current_price = re.sub(",", "", price_string)
                     current_price = int(current_price)
 
-                    actual_price_string = product.find_all('div', class_="_3auQ3N _2GcJzG")
+                    cost_price_string = product.find_all('div', class_="_3auQ3N _2GcJzG")
 
                     try:
-                        actual_price_string = actual_price_string[0].text[1:]
-                        actual_price = re.sub(",", "", actual_price_string)
-                        actual_price = int(actual_price)
-                    except expression as identifier:
-                        actual_price = current_price
+                        cost_price_string = cost_price_string[0].text[1:]
+                        cost_price = re.sub(",", "", cost_price_string)
+                        cost_price = int(cost_price)
+                    except:
+                        cost_price = current_price
                     
-                    offer = ((actual_price-current_price)/actual_price)*100
-                    offer = int(offer)
+                    discount = ((cost_price-current_price)/cost_price)*100
+                    discount = int(discount)
 
                     configuration = product.find_all('li', class_="tVe95H")
                     conf_list = []
                     for conf in configuration:
                         conf_list.append(conf.text)
                     
+                    # as description is coming as lists so just joining it into a string with so that it can be easily stored in firebase
+                    # whenever it will be parsed to the frontend we will first convert the string to list and will parse it to frontend
+                    # so that we can easily loop through the configurations
+                    description = "|||".join(conf_list)
                     timestamp = int(time.time())
+
+                    product_save = {
+                        'product_link': product_link,
+                        'product_name': product_name,
+                        'current_price': current_price,
+                        'description': description,
+                    }
+
+                    # checking presence of the particular product in the database previously
+                    snapshot = root.child('products').child(product_id).get()
+
+                    # adding product information to database
+                    if snapshot is None:
+                        root.child('products').child(product_id).set(product_save)
+                    else:
+                        root.child('products').child(product_id).update({
+                            'current_price': current_price
+                        })
+
+                    history = {
+                        'current_price': current_price,
+                        'discount': discount,
+                        'cost_price': cost_price
+                    }
+                    
+                    # adding price history
+                    root.child('history').child(product_id).child(str(timestamp)).set(history)
+
             else:
                 all_products = soup.find_all('div', class_='_3liAhj')
                 for product in all_products:
@@ -199,23 +223,98 @@ class SearchView(APIView):
                     current_price = re.sub(",", "", price_string)
                     current_price = int(current_price)
                     
-                    actual_price_string = product.find_all('div', class_="_3auQ3N")
+                    cost_price_string = product.find_all('div', class_="_3auQ3N")
     
                     try:
-                        actual_price_string = actual_price_string[0].text[1:]
-                        actual_price = re.sub(",", "", actual_price_string)
-                        actual_price = int(actual_price)
-                    except expression as identifier:
-                        actual_price = current_price
+                        cost_price_string = cost_price_string[0].text[1:]
+                        cost_price = re.sub(",", "", cost_price_string)
+                        cost_price = int(cost_price)
+                    except:
+                        cost_price = current_price
                         
-                    offer = ((actual_price-current_price)/actual_price)*100
-                    offer = int(offer)
+                    discount = ((cost_price-current_price)/cost_price)*100
+                    discount = int(discount)
                     
                     
                     configuration = product.find_all('div', class_="_1rcHFq")
                     conf_list = []
                     for conf in configuration:
                         conf_list.append(conf.text)
+
+                    # as description is coming as lists so just joining it into a string with so that it can be easily stored in firebase
+                    # whenever it will be parsed to the frontend we will first convert the string to list and will parse it to frontend
+                    # so that we can easily loop through the configurations
+                    description = "|||".join(conf_list)
                     timestamp = int(time.time())
+
+                    product_save = {
+                        'product_link': product_link,
+                        'product_name': product_name,
+                        'current_price': current_price,
+                        'description': description,
+                    }
+
+                    snapshot = root.child('products').child(product_id).get()
+                    
+                    # adding product information to database
+                    if snapshot is None:
+                        root.child('products').child(product_id).set(product_save)
+                    else:
+                        root.child('products').child(product_id).update({
+                            'current_price': current_price
+                        })
+
+                    history = {
+                        'current_price': current_price,
+                        'discount': discount,
+                        'cost_price': cost_price
+                    }
+                    
+                    # adding price history into database
+                    root.child('history').child(product_id).child(str(timestamp)).set(history)
+            return Response({"mssg": 'done', "name": 'done'}, status=status.HTTP_200_OK)
+
+
+def scrape(url):
+
+    page = requests.get(url)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    
+    product_id = re.findall("\w?pid.*&lid", url)
+    product_id = product_id[0][4: -4]
+
+    product_information = soup.find_all('div', class_='_1HmYoV _35HD7C col-8-12')
+    if len(product_information) == 0:
+        return "Error in Scrapping or may be rate limit reached"
+    current_price = product_information[0].find_all('div', class_='_1vC4OE _3qQ9m1')
+
+    current_price = current_price[0].text[1:]
+    current_price = re.sub(",", "", current_price)
+    current_price = int(current_price)
+
+    cost_price = product_information[0].find_all('div', class_='_3auQ3N _1POkHg')
+    if len(cost_price) == 0:
+        cost_price = cost_price[0].text[1:]
+        cost_price = re.sub(",", "", cost_price)
+        cost_price = int(cost_price)
+    else:
+        cost_price = current_price
+    
+    discount = ((cost_price-current_price)/cost_price)*100
+
+    timestamp = int(time.time())
+    history = {
+        'current_price': current_price,
+        'cost_price': cost_price,
+        'discount': int(discount)
+    }
+
+    root.child('history').child(product_id).child(str(timestamp)).set(history)
+
+    root.child('products').child(product_id).update({
+                            'current_price': current_price
+                        })
+
+    return None
                     
                                     
