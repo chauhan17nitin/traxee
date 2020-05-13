@@ -11,6 +11,12 @@ from firebase_admin import auth
 from firebase_admin import db
 from firebase_admin import credentials
 
+# importing tools for scrapping
+import requests
+from bs4 import BeautifulSoup
+import re
+import time
+
 
 cred = credentials.Certificate('/home/nitin/Downloads/traxee-pr-301-firebase-adminsdk-y22ww-2e5aafb334.json')
 
@@ -21,6 +27,9 @@ default_app = firebase_admin.initialize_app(cred ,{
 })
 
 root = db.reference()
+
+
+
 
 
 class SignUpView(APIView):
@@ -121,4 +130,92 @@ class CheckView(APIView):
         user = firebase_admin.auth.verify_id_token(id_token, app=None, check_revoked=True)
         session_cookie = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjBwUjNXdyJ9.eyJpc3MiOiJodHRwczovL3Nlc3Npb24uZmlyZWJhc2UuZ29vZ2xlLmNvbS90cmF4ZWUtcHItMzAxIiwibmFtZSI6Ik5pdGluIiwiYXVkIjoidHJheGVlLXByLTMwMSIsImF1dGhfdGltZSI6MTU4NzQxNjkzNiwidXNlcl9pZCI6InhNR0N4SnozVElhVERpdFFQdnFtRW1KTnRZNDMiLCJzdWIiOiJ4TUdDeEp6M1RJYVREaXRRUHZxbUVtSk50WTQzIiwiaWF0IjoxNTg3NDE2OTM4LCJleHAiOjE1ODc4NDg5MzgsImVtYWlsIjoibml0bmhhbjE5QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJuaXRuaGFuMTlAZ21haWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.B9LyHwJOmIbZ1XE68QbyzEJb69mXZ66IPkvWnbahfYA8Ub9OZV0AgSspKf-fae6f3weAlEdsdCKnxO_ZXI3VCSpwWY5uhtfSbP-7dZ0BZ0LLGpViosP8YDquKzI2D68OISDdf-kSLQdWOy06sOGiUKNNSUryrxv4MVdkqMu6HigCzkKMU7svPbR4BikccAwwKcgvmZmL-jlDTCgQifVf6v7LcPEDHAzaLkGZN3LfVaHB1lO_kghM2hWg_2BB_Nnqa7BotOZnrY4M_wojIp4II3UWv79naHfGo05yQK4-RL6reBfyl7OVJSOVK8iksNwelNB6bPTUX2fMs7MOEmB1Dg"
         cookie = firebase_admin.auth.verify_session_cookie(session_cookie, check_revoked=True, app=None)
-        return Response({"mssg": user, "cookie": cookie}, status=status.HTTP_200_OK)
+        return Response({"mssg": user, "cookie": cookie}, status=status.HTTP_200_OK)\
+
+class SearchView(APIView):
+
+    def post(self, request, format=None):
+        serializer = SearchItemSerializer(data = request.data)
+
+        if serializer.is_valid():
+            item = serializer.validated_data['item']
+            # editing string
+            item = re.sub(" ", "%20", item)
+            item_search = "https://www.flipkart.com/search?q="+item
+
+            page = requests.get(item_search)
+            soup = BeautifulSoup(page.content, 'html.parser')
+
+            all_products = soup.find_all('div', class_='_1UoZlX')
+
+            # there are two common style in which data can exists on a flipkart page
+            if len(all_products) != 0:
+                products = []
+                for product in all_products:
+                    for a in product.find_all("a", href=True):
+                        product_id = re.findall("\w?pid.*&lid", a['href'])
+                        product_id = product_id[0][4: -4]
+                        product_link = 'flipkart.com' + a['href']
+                    product_name = product.find_all('div', class_="_3wU53n")
+                    product_name = product_name[0].text
+
+                    # finding current price
+                    price_string = product.find_all('div', class_ = "_1vC4OE _2rQ-NK")
+                    price_string = price_string[0].text[1:]
+                    current_price = re.sub(",", "", price_string)
+                    current_price = int(current_price)
+
+                    actual_price_string = product.find_all('div', class_="_3auQ3N _2GcJzG")
+
+                    try:
+                        actual_price_string = actual_price_string[0].text[1:]
+                        actual_price = re.sub(",", "", actual_price_string)
+                        actual_price = int(actual_price)
+                    except expression as identifier:
+                        actual_price = current_price
+                    
+                    offer = ((actual_price-current_price)/actual_price)*100
+                    offer = int(offer)
+
+                    configuration = product.find_all('li', class_="tVe95H")
+                    conf_list = []
+                    for conf in configuration:
+                        conf_list.append(conf.text)
+                    
+                    timestamp = int(time.time())
+            else:
+                all_products = soup.find_all('div', class_='_3liAhj')
+                for product in all_products:
+                    for a in product.find_all("a", class_='Zhf2z-', href=True):
+                        product_id = re.findall("\w?pid.*&lid", a['href'])
+                        product_id = product_id[0][4: -4]
+                        product_link = 'flipkart.com' + a['href']
+                    product_name = product.find_all("a", class_="_2cLu-l")
+                    product_name = product_name[0].text
+                    
+                    price_string = product.find_all('div', class_ = "_1vC4OE")
+                    price_string = price_string[0].text[1:]
+                    
+                    current_price = re.sub(",", "", price_string)
+                    current_price = int(current_price)
+                    
+                    actual_price_string = product.find_all('div', class_="_3auQ3N")
+    
+                    try:
+                        actual_price_string = actual_price_string[0].text[1:]
+                        actual_price = re.sub(",", "", actual_price_string)
+                        actual_price = int(actual_price)
+                    except expression as identifier:
+                        actual_price = current_price
+                        
+                    offer = ((actual_price-current_price)/actual_price)*100
+                    offer = int(offer)
+                    
+                    
+                    configuration = product.find_all('div', class_="_1rcHFq")
+                    conf_list = []
+                    for conf in configuration:
+                        conf_list.append(conf.text)
+                    timestamp = int(time.time())
+                    
+                                    
