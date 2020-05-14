@@ -1,0 +1,106 @@
+{% extends 'twitter/base.html' %}
+{% block title %}Search{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    {% if none %}
+    <br><br>
+    <h3 class="text-center"><b>ERROR</b></h3>
+    <h4 class="text-center"><b>{{ none }}</b></h4>
+    {% else %}
+        <!-- graphics for hate-score-->
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center" >
+                <div class="progress blue">
+                    <span class="progress-left">
+                        <span class="progress-bar"></span>
+                    </span>
+                    <span class="progress-right">
+                        <span class="progress-bar"></span>
+                    </span>
+                    <div class="progress-value">10%</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 text-center">
+                <div class="progress yellow">
+                    <span class="progress-left">
+                        <span class="progress-bar"></span>
+                    </span>
+                    <span class="progress-right">
+                        <span class="progress-bar"></span>
+                    </span>
+                    <div class="progress-value">75%</div>
+                </div>
+            </div>
+
+            <div class="text-center col-sm-12 col-md-12">
+                    <div class="panel-body">
+                        <a class="text-center">
+                            {% if result.profile_image %}
+                                <img src="{{ result.profile_image }}" alt="profile image">
+                            {% else %}
+                                <h3>No image to display</h3>
+                            {% endif %}
+                        </a>
+                        <h3>{{ result.name }}<br><small>@{{ result.screen_name }}</small></h3><br>
+                        <span class="storefront_add_to_cart">
+                            <a href="{% url 'twitter:add_track' result.screen_name %}" class="btn btn-primary btn-sm" role="button" >Track</a>
+                        </span>
+                    </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th class="text-center" style="width: 70%">Previous Tweets</th>
+                                <th class="text-center">Hate</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                        <!-- for loop for tweets goes here -->
+                            {% for tweet in result.tweets %}
+                            <tr>
+                                <td>
+                                    <h6>{{ tweet.full_text }}</h6>
+                                </td>
+                                <td>
+                                    <h6 class="text-center">hate value</h6>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+
+
+<!--<img src="{{ result.profile_image }}" alt="Trulli">
+<h2>{{ result.name }}</h2>
+<h3>{{ result.screen_name }}</h3>
+<h5>Want to add on Track</h5>
+<span class="storefront_add_to_cart">
+    <a href="{% url 'twitter:add_track' screen_name=result.screen_name %}" class="btn btn-primary btn-sm" role="button" >Track</a>
+</span>
+
+
+
+
+
+{% for tweet in result.tweets %}  
+<h6>{{ tweet.full_text }}</h6>
+<hr>
+{% endfor %}
+
+-->
+{% endblock %}
