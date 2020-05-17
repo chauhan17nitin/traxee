@@ -13,7 +13,7 @@ from firebase_admin import db
 from firebase_admin import credentials
 
 from .forms import UserForm
-cred = credentials.Certificate('/home/nitin/Downloads/traxee-pr-301-firebase-adminsdk-y22ww-2e5aafb334.json')
+cred = credentials.Certificate('E:/Projects/PRs/PR-301- AI website/git/traxee/traxee-pr-301-firebase-adminsdk-y22ww-2e5aafb334.json')
 
 token_url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCRL8ifllPsdT1gFbu_88-hA82VguTCCPM"
 
@@ -25,17 +25,12 @@ root = db.reference()
 curr_user={}
 curr_user['uid']=None
 
-# Create your views here.
 def index(request):
-    # global curr_user
-    if request.method == "GET":
-        try:
-            # print(request.session['uid'])
-            sess = request.COOKIES.get('session')
-            return render(request, 'flipkart/index.html')
-        except Exception as e:
-            print('Error is', e)
-            return render(request, 'flipkart/home.html')
+
+    if request.COOKIES.get('session'):
+        return render(request, 'flipkart/index.html')
+    else:
+        return render(request, 'flipkart/authentication.html')
         
 def signup_user(request):
 
@@ -53,10 +48,15 @@ def signup_user(request):
             name = user.display_name
     
         except Exception as e:
-            context = {
-            "error_message":e,
-            }
-            print(e)
+            if type(e).__name__=='ValueError':
+                context = {
+                    "error_message": "Provide Valid Email"
+                    }
+            if type(e).__name__=='EmailAlreadyExistsError':
+                context = {
+                    "error_message": "Email Already Existed",
+                    }
+            # print(e)
             return render(request, 'flipkart/authentication.html', context)
 
         if isPremium:
@@ -77,11 +77,6 @@ def signup_user(request):
             print(r.json())
 
             return render(request, 'flipkart/index.html')
-    
-    context = {
-    
-    }
-    print('leved from here')
 
     return render(request, 'flipkart/authentication.html', context)
 
