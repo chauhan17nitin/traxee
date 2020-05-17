@@ -13,30 +13,46 @@
 <!-- auth modals -->
 
 <div class="auth open">
+  {% if error_in == 'login' %}
     <div class="modal active">
       <h2>Login to Your traXee account!!</h2>
       {% if error_message %}
         <p><strong>{{ error_message }}</strong></p>
       {% endif %}
+  {% elif error_in == 'signup' %}
+    <div class="modal">
+      <h2>Login to Your traXee account!!</h2>
+  {% else %}
+    <div class="modal active">
+      <h2>Login to Your traXee account!!</h2>
+  {% endif %}
+      
       <form class="login-form" role="form" action="{% url 'flipkart:login' %}" method="post">
         {% csrf_token %}
-        <input id="id_username" name="email" type="text" placeholder="email" required>
-        <input id="id_password" maxlength="30" name="password" type="password" placeholder="password" required>
+        <input id="id_username" name="email" type="text" placeholder="email" type="email" required>
+        <input id="id_password" minlength="6" name="password" type="password" placeholder="password" required>
         <button type="submit">Login</button>
         <p class="error"></p>
       </form>
       <div>No account? <a class="switch">Register instead</a></div>
     </div>
-    <div class="modal">
-      <h2>Register</h2>
-      {% if error_message %}
-        <p><strong>{{ error_message }}</strong></p>
-      {% endif %}
+    {% if error_in == 'signup' %}
+      <div class="modal active">
+        <h2>Register</h2>
+        {% if error_message %}
+          <p><strong>{{ error_message }}</strong></p>
+        {% endif %}
+    {% else %}
+      <div class="modal">
+        <h2>Register</h2>
+    {% endif %}
+
+    
       <form class="register-form" id="register-form" role="form" action="{% url 'flipkart:signup' %}" method="post">
         {% csrf_token %}
-        <input id="id_username" name="username" type="text" placeholder="username" required>
+        <input id="id_username" name="username" type="text" placeholder="username" type="email" required>
         <input id="id_email" type="text" name="email" placeholder="Email" required>
-        <input id="id_password" name="password" type="password" placeholder="password" required>
+        <input id="id_password" name="password" type="password" placeholder="password" minlength="6" required>
         <button type="submit">Register</button>
         <p class="error"></p>
       </form>

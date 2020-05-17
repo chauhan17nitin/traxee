@@ -13,7 +13,7 @@ from firebase_admin import db
 from firebase_admin import credentials
 
 from .forms import UserForm
-cred = credentials.Certificate('E:/Projects/PRs/PR-301- AI website/git/traxee/traxee-pr-301-firebase-adminsdk-y22ww-2e5aafb334.json')
+cred = credentials.Certificate('/home/nitin/Downloads/traxee/github/traxee/traxee-pr-301-firebase-adminsdk-y22ww-2e5aafb334.json')
 
 token_url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCRL8ifllPsdT1gFbu_88-hA82VguTCCPM"
 
@@ -27,10 +27,12 @@ curr_user['uid']=None
 
 def index(request):
 
-    if request.COOKIES.get('session'):
-        return render(request, 'flipkart/index.html')
-    else:
-        return render(request, 'flipkart/authentication.html')
+    if request.method == "GET":
+        if request.COOKIES.get('session'):
+            return render(request, 'flipkart/index.html')
+        else:
+            return render(request, 'flipkart/authentication.html')
+    
         
 def signup_user(request):
 
@@ -50,11 +52,13 @@ def signup_user(request):
         except Exception as e:
             if type(e).__name__=='ValueError':
                 context = {
-                    "error_message": "Provide Valid Email"
+                    "error_message": "Provide Valid Email or Password",
+                    "error_in": 'signup'
                     }
             if type(e).__name__=='EmailAlreadyExistsError':
                 context = {
                     "error_message": "Email Already Existed",
+                    'error_in': 'signup'
                     }
             # print(e)
             return render(request, 'flipkart/authentication.html', context)
@@ -74,10 +78,24 @@ def signup_user(request):
             })
 
             r = requests.post(token_url, data=payload)
-            print(r.json())
+            resp = r.json()
+            idToken = str(resp['idToken'])
+            expires_in = timedelta(days=5)
+            expires = datetime.datetime.now() + expires_in
+            uid = str(resp['localId'])
 
-            return render(request, 'flipkart/index.html')
 
+            session_cookie = firebase_admin.auth.create_session_cookie(idToken, expires_in)
+            request.session['uid'] = uid
+
+            response = HttpResponseRedirect(reverse('flipkart:index'))
+            response.set_cookie('session', session_cookie, expires=expires)
+            print('cookie created successfully')
+            return response
+    
+    context = {
+        'error_in': 'signup'
+        }
     return render(request, 'flipkart/authentication.html', context)
 
 def login_user(request):
@@ -114,7 +132,7 @@ def login_user(request):
         else:
             # print('dd')
             
-            return render(request, 'flipkart/authentication.html', {'error_message': 'Invalid login'})
+            return render(request, 'flipkart/authentication.html', {'error_message': 'Invalid login', 'error_in': 'login'})
 
     return render(request, 'flipkart/authentication.html')
 
