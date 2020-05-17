@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>{% block title %}traXee{% endblock %}</title>
     {% load static %}
-    <link rel="shortcut icon" type="image/png" href="{% static 'favicon_he.ico' %}"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=sans-serif" rel="stylesheet" type="text/css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
@@ -24,7 +23,7 @@
                 </button>
                 <a class="navbar-brand" href="{% url 'flipkart:index' %}">traXee</a>
             </div>
-
+            <link rel="shortcut icon" type="image/png" href="{% static 'favicon_he.ico' %}"/>
             <!-- Items -->
             <div class="collapse navbar-collapse" id="topNavBar">
                 <ul class="nav navbar-nav">

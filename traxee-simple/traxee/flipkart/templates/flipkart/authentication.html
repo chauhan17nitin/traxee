@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>traXee Authentication</title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'flipkart/style2.css' %}"/>
+  </head>
+<body>
+
+<!-- auth modals -->
+
+<div class="auth open">
+    <div class="modal active">
+      <h2>Login to Your traXee account!!</h2>
+      {% if error_message %}
+        <p><strong>{{ error_message }}</strong></p>
+      {% endif %}
+      <form class="login-form" role="form" action="{% url 'flipkart:login' %}" method="post">
+        {% csrf_token %}
+        <input id="id_username" name="email" type="text" placeholder="email" required>
+        <input id="id_password" maxlength="30" name="password" type="password" placeholder="password" required>
+        <button type="submit">Login</button>
+        <p class="error"></p>
+      </form>
+      <div>No account? <a class="switch">Register instead</a></div>
+    </div>
+    <div class="modal">
+      <h2>Register</h2>
+      {% if error_message %}
+        <p><strong>{{ error_message }}</strong></p>
+      {% endif %}
+      <form class="register-form" id="register-form" role="form" action="{% url 'flipkart:signup' %}" method="post">
+        {% csrf_token %}
+        <input id="id_username" name="username" type="text" placeholder="username" required>
+        <input id="id_email" type="text" name="email" placeholder="Email" required>
+        <input id="id_password" name="password" type="password" placeholder="password" required>
+        <button type="submit">Register</button>
+        <p class="error"></p>
+      </form>
+      <div>Got an account? <a class="switch">Login instead</a></div>
+    </div>
+  </div>
+  {% load static %}
+  <script src="{% static 'flipkart/authentication.js' %}"></script>
+
+</body>
+
+</html>
