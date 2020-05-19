@@ -197,7 +197,7 @@ class SearchView(APIView):
                         root.child('products').child(product_id).update({
                             'current_price': current_price
                         })
-
+                    
                     history = {
                         'current_price': current_price,
                         'discount': discount,

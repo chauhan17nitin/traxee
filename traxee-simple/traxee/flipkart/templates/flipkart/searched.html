@@ -1,4 +1,4 @@
-{% extends 'twitter/base.html' %}
+{% extends 'flipkart/base.html' %}
 {% block title %}Search{% endblock %}
 
 {% block body %}
@@ -9,48 +9,11 @@
     <h3 class="text-center"><b>ERROR</b></h3>
     <h4 class="text-center"><b>{{ none }}</b></h4>
     {% else %}
-        <!-- graphics for hate-score-->
-        <div class="row">
-            <div class="col-md-6 col-sm-6 text-center" >
-                <div class="progress blue">
-                    <span class="progress-left">
-                        <span class="progress-bar"></span>
-                    </span>
-                    <span class="progress-right">
-                        <span class="progress-bar"></span>
-                    </span>
-                    <div class="progress-value">10%</div>
-                </div>
-            </div>
-            <div class="col-md-6 col-sm-6 text-center">
-                <div class="progress yellow">
-                    <span class="progress-left">
-                        <span class="progress-bar"></span>
-                    </span>
-                    <span class="progress-right">
-                        <span class="progress-bar"></span>
-                    </span>
-                    <div class="progress-value">75%</div>
-                </div>
-            </div>
 
-            <div class="text-center col-sm-12 col-md-12">
-                    <div class="panel-body">
-                        <a class="text-center">
-                            {% if result.profile_image %}
-                                <img src="{{ result.profile_image }}" alt="profile image">
-                            {% else %}
-                                <h3>No image to display</h3>
-                            {% endif %}
-                        </a>
-                        <h3>{{ result.name }}<br><small>@{{ result.screen_name }}</small></h3><br>
-                        <span class="storefront_add_to_cart">
-                            <a href="{% url 'twitter:add_track' result.screen_name %}" class="btn btn-primary btn-sm" role="button" >Track</a>
-                        </span>
-                    </div>
-            </div>
-        </div>
+        
 
+            
+    <h2 class="text-center">Most Relevant Products from Flipkart</h2>
 
         <div class="row">
             <div class="col-sm-12">
@@ -58,20 +21,28 @@
                     <table class="table table-bordered table-hover">
                         <thead class="thead-dark">
                             <tr>
-                                <th class="text-center" style="width: 70%">Previous Tweets</th>
-                                <th class="text-center">Hate</th>
+                                <th class="text-center" style="width: 70%">Products</th>
+                                <th class="text-center">Images</th>
                             </tr>
                         </thead>
 
                         <tbody>
                         <!-- for loop for tweets goes here -->
-                            {% for tweet in result.tweets %}
+                            {% for product in result %}
                             <tr>
                                 <td>
-                                    <h6>{{ tweet.full_text }}</h6>
+                                    <a href="{{ product.product_link }}" target="_blank"><h3>{{ product.product_name }}</h3></a>
+                                    <h4>{{ product.current_price.currency }} {{ product.current_price.amount }}</h4>
+                                    {% for configuration in product.description %}
+                                        <h4>{{ configuration }}</h4>
+                                    {% endfor %}
+                                    <span class="storefront_add_to_cart">
+                                        <a href="#" class="btn btn-primary btn-sm" role="button" >Track</a>
+                                        <a href="{{ product.product_link }}" class="btn btn-primary btn-sm" target="_blank" role="button">Buy Now</a>
+                                    </span>                                    
                                 </td>
                                 <td>
-                                    <h6 class="text-center">hate value</h6>
+                                    <img src="{{ product.image_link }}" alt="product image"> 
                                 </td>
                             </tr>
                             {% endfor %}
@@ -83,24 +54,4 @@
     {% endif %}
 </div>
 
-
-
-<!--<img src="{{ result.profile_image }}" alt="Trulli">
-<h2>{{ result.name }}</h2>
-<h3>{{ result.screen_name }}</h3>
-<h5>Want to add on Track</h5>
-<span class="storefront_add_to_cart">
-    <a href="{% url 'twitter:add_track' screen_name=result.screen_name %}" class="btn btn-primary btn-sm" role="button" >Track</a>
-</span>
-
-
-
-
-
-{% for tweet in result.tweets %}  
-<h6>{{ tweet.full_text }}</h6>
-<hr>
-{% endfor %}
-
--->
 {% endblock %}

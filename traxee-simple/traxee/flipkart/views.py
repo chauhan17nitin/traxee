@@ -12,6 +12,8 @@ from firebase_admin import auth
 from firebase_admin import db
 from firebase_admin import credentials
 
+import time
+
 from .forms import UserForm
 cred = credentials.Certificate('/home/nitin/Downloads/traxee/github/traxee/traxee-pr-301-firebase-adminsdk-y22ww-2e5aafb334.json')
 
@@ -123,15 +125,14 @@ def login_user(request):
 
             session_cookie = firebase_admin.auth.create_session_cookie(idToken, expires_in)
             request.session['uid'] = uid
-            print(session_cookie)
+            
             response = HttpResponseRedirect(reverse('flipkart:index'))
 
             response.set_cookie('session', session_cookie, expires=expires)
             print('cookie created successfully')
             return response
         else:
-            # print('dd')
-            
+            print(r.status_code)
             return render(request, 'flipkart/authentication.html', {'error_message': 'Invalid login', 'error_in': 'login'})
 
     return render(request, 'flipkart/authentication.html')
@@ -148,3 +149,114 @@ def logout_user(request):
         except Exception as e:
             print(e)
             return render(request, 'flipkart/authentication.html')
+
+def search_product(request):
+
+    if request.method == 'GET':
+        query = request.GET.get("q", False)
+        
+        HEADERS = { 
+            "Fk-Affiliate-Id": "shaikhajw", 
+            "Fk-Affiliate-Token": "431799c9268040bebdb683698d6736da"
+            }
+
+        PARAMS = { 
+                "query": query, 
+                "resultCount": 5
+                }
+        URL = "https://affiliate-api.flipkart.net/affiliate/1.0/search.json" 
+
+        r = requests.get(url = URL, params = PARAMS, headers=HEADERS) 
+
+        if r.status_code == 200 :
+            data = r.json()
+            products = []
+            for product in data['products']:
+                product_id = product['productBaseInfoV1']['productId']
+                product_name = product['productBaseInfoV1']['title']
+                product_link = product['productBaseInfoV1']['productUrl']
+                current_price = product['productBaseInfoV1']['flipkartSpecialPrice']
+                cost_price = product['productBaseInfoV1']['flipkartSellingPrice']
+                description = product['categorySpecificInfoV1']['keySpecs']
+
+                # in future to add try except may be the particular size not present
+                image_link = product['productBaseInfoV1']['imageUrls']['400x400']
+
+                discount = ((cost_price['amount']-current_price['amount'])/cost_price['amount'])*100
+                discount = int(discount)
+
+                timestamp = int(time.time())
+
+                # description = "|||".join(description)
+
+                product_save = {
+                    'product_link': product_link,
+                    'product_name': product_name,
+                    'current_price': current_price,
+                    'description': description,
+                    'image_link': image_link
+                }
+
+                products.append(product_save)
+
+                # checking presence of the particular product in the database previously
+                snapshot = root.child('products').child(product_id).get()
+
+                if snapshot is None:
+                    root.child('products').child(product_id).set(product_save)
+                else:
+                    root.child('products').child(product_id).update({
+                            'current_price': current_price
+                        })
+                history = {
+                        'current_price': current_price,
+                        'discount': discount,
+                        'cost_price': cost_price
+                    }
+
+                # adding price history
+                root.child('history').child(product_id).child(str(timestamp)).set(history)
+            
+            return render(request, 'flipkart/searched.html', {'result': products})
+        
+        else:
+            return render(request, 'flipkart/index.html')
+
+
+# this api is not tested yet
+def add_track(request, product_id):
+
+    if request.method == 'GET':
+        if request.COOKIES.get('session'):
+            # check how long session variable stays this is in testing mode
+            user_id = request.session['uid']
+            
+            root.child('notifications').child(product_id).child('users').child(user_id).set(1)
+            root.child('users').child(user_id).child('favourites').child(product_id).set(1)
+
+        else:
+            return render(request, 'flipkart/authentication.html')
+
+# this api is not tested yet
+def remove_track(request, product_id):
+
+    if request.method == 'GET':
+        if request.COOKIES.get('session'):
+            # check session variable stays how long
+            user_id = request.session['uid']
+
+            ref = root.child('notifications').child(product_id).child('users').child(user_id)
+            ref.delete()
+
+            root.child('users').child(user_id).child('favourites').child(product_id).set(0)
+        else:
+            return render(request, 'flipkart/authentication.html')
+
+
+
+        
+
+
+
+
+
