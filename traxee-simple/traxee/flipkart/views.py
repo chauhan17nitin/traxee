@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.contrib import messages
 
 from datetime import timedelta
 import datetime
@@ -15,7 +16,8 @@ from firebase_admin import credentials
 import time
 
 from .forms import UserForm
-cred = credentials.Certificate('/home/nitin/Downloads/traxee/github/traxee/traxee-pr-301-firebase-adminsdk-y22ww-2e5aafb334.json')
+
+cred = credentials.Certificate('E:/Projects/PRs/PR-301- AI website/git/traxee/traxee-pr-301-firebase-adminsdk-y22ww-2e5aafb334.json')
 
 token_url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCRL8ifllPsdT1gFbu_88-hA82VguTCCPM"
 
@@ -178,7 +180,7 @@ def search_product(request):
                 current_price = product['productBaseInfoV1']['flipkartSpecialPrice']
                 cost_price = product['productBaseInfoV1']['flipkartSellingPrice']
                 description = product['categorySpecificInfoV1']['keySpecs']
-
+                # print(product_id)
                 # in future to add try except may be the particular size not present
                 image_link = product['productBaseInfoV1']['imageUrls']['400x400']
 
@@ -190,6 +192,7 @@ def search_product(request):
                 # description = "|||".join(description)
 
                 product_save = {
+                    'product_id': product_id,
                     'product_link': product_link,
                     'product_name': product_name,
                     'current_price': current_price,
@@ -223,37 +226,65 @@ def search_product(request):
             return render(request, 'flipkart/index.html')
 
 
-# this api is not tested yet
 def add_track(request, product_id):
 
     if request.method == 'GET':
         if request.COOKIES.get('session'):
             # check how long session variable stays this is in testing mode
             user_id = request.session['uid']
-            
-            root.child('notifications').child(product_id).child('users').child(user_id).set(1)
-            root.child('users').child(user_id).child('favourites').child(product_id).set(1)
-
+            check = root.child('users').child(user_id).child('favourites').child(product_id).get()
+            if check:
+                messages.success(request, 'The product is being tracked already')
+                return display_track(request)
+            else:
+                root.child('notifications').child(product_id).child('users').child(user_id).set(1)
+                root.child('users').child(user_id).child('favourites').child(product_id).set(1)
+                return display_track(request)
         else:
             return render(request, 'flipkart/authentication.html')
 
-# this api is not tested yet
+
 def remove_track(request, product_id):
+
+    # if request.method == 'GET':
+    if request.COOKIES.get('session'):
+        # check session variable stays how long
+        user_id = request.session['uid']
+
+        ref = root.child('notifications').child(product_id).child('users').child(user_id)
+        ref.delete()
+
+        root.child('users').child(user_id).child('favourites').child(product_id).delete()
+        return display_track(request)
+    else:
+        return render(request, 'flipkart/authentication.html')
+
+
+def display_track(request):
 
     if request.method == 'GET':
         if request.COOKIES.get('session'):
-            # check session variable stays how long
             user_id = request.session['uid']
+            p = root.child('users').child(user_id).child('favourites').get()
+            products=[]
+            for key,_ in p.items():
+                detail={}
+                d = root.child('products').child(key).get()
+                detail['product_id'] = key
+                detail['product_price'] = d['current_price']['amount']
+                detail['product_name'] = d['product_name']
+                if 'image_link' in d:
+                    detail['image_link'] = d['image_link']
+                detail['product_link'] = d['product_link']
 
-            ref = root.child('notifications').child(product_id).child('users').child(user_id)
-            ref.delete()
+                products.append(detail)
+            # print(products)
 
-            root.child('users').child(user_id).child('favourites').child(product_id).set(0)
+
+            return render(request, 'flipkart/tracked.html', {'products':products})
         else:
             return render(request, 'flipkart/authentication.html')
-
-
-
+          
         
 
 

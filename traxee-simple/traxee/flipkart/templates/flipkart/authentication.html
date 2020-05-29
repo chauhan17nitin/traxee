@@ -29,8 +29,8 @@
       
       <form class="login-form" role="form" action="{% url 'flipkart:login' %}" method="post">
         {% csrf_token %}
-        <input id="id_username" name="email" type="text" placeholder="email" type="email" required>
-        <input id="id_password" minlength="6" name="password" type="password" placeholder="password" required>
+        <input id="id_username" name="email" type="email" placeholder="email" type="email" required>
+        <input id="id_password" name="password" type="password" placeholder="password" required>
         <button type="submit">Login</button>
         <p class="error"></p>
       </form>
@@ -51,7 +51,7 @@
       <form class="register-form" id="register-form" role="form" action="{% url 'flipkart:signup' %}" method="post">
         {% csrf_token %}
         <input id="id_username" name="username" type="text" placeholder="username" type="email" required>
-        <input id="id_email" type="text" name="email" placeholder="Email" required>
+        <input id="id_email" type="email" name="email" placeholder="Email" required>
         <input id="id_password" name="password" type="password" placeholder="password" minlength="6" required>
         <button type="submit">Register</button>
         <p class="error"></p>
