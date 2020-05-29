@@ -37,7 +37,7 @@
                                         <h4>{{ configuration }}</h4>
                                     {% endfor %}
                                     <span class="storefront_add_to_cart">
-                                        <a href="#" class="btn btn-primary btn-sm" role="button" >Track</a>
+                                        <a href="{% url 'flipkart:add_track' product.product_id %}" class="btn btn-primary btn-sm" role="button" >Track</a>
                                         <a href="{{ product.product_link }}" class="btn btn-primary btn-sm" target="_blank" role="button">Buy Now</a>
                                     </span>                                    
                                 </td>

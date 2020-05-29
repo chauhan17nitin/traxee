@@ -1,0 +1,41 @@
+{% extends 'flipkart/base.html' %}
+{% block title %}Tracked Products{% endblock %}
+{% block handlers_active %}active{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3 class="text-center">List of Tracked Products</h3><br><br>
+        </div>
+        {% if products %}
+            {% for product in products %}
+                <div class="col-sm-4 col-lg-2">
+                    <div class="thumbnail">
+                        <a href="#">
+                            <img src="{{ product.image_link }}" class="img-responsive">
+                        </a>
+                        <div class="caption">
+                            <h4 class="text-center">{{ product.product_name }}</h4>
+                            <h5 class="text-center">Price: Rs {{ product.product_price }}</h5>
+
+                            <!-- View Details-->
+                                <a href="#" class="btn btn-primary btn-sm" role="button">Details</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                            
+                            <!-- Buy-->
+                            <a href="{{ product.product_link }}" target="_blank" class="btn btn-success btn-sm" role="button">Buy</a>&nbsp;&nbsp;&nbsp;
+                            
+                            <!-- Delete handler-->
+                                <a href="{% url 'flipkart:delete_track' product.product_id %}" class="btn btn-danger btn-sm" role="button">Delete</a>
+                        </div>
+                    </div>
+                </div>
+                {% cycle '' '' '' '' '' '<div class="clearfix visible-lg"></div>' %}
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+
