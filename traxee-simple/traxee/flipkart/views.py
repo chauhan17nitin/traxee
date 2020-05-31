@@ -137,7 +137,7 @@ def login_user(request):
             idToken = str(resp['idToken'])
             expires = datetime.datetime.now() + expires_in
             uid = str(resp['localId'])
-
+            print(uid)
 
             session_cookie = firebase_admin.auth.create_session_cookie(idToken, expires_in)
             request.session['uid'] = uid
