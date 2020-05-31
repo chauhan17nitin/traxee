@@ -28,10 +28,6 @@ default_app = firebase_admin.initialize_app(cred ,{
 
 root = db.reference()
 
-
-
-
-
 class SignUpView(APIView):
 
     def post(self, request, format=None):

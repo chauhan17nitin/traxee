@@ -17,7 +17,7 @@ import time
 
 from .forms import UserForm
 
-cred = credentials.Certificate('E:/Projects/PRs/PR-301- AI website/git/traxee/traxee-pr-301-firebase-adminsdk-y22ww-2e5aafb334.json')
+cred = credentials.Certificate('/home/nitin/Downloads/traxee/github/traxee/traxee-pr-301-firebase-adminsdk-y22ww-2e5aafb334.json')
 
 token_url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCRL8ifllPsdT1gFbu_88-hA82VguTCCPM"
 
@@ -36,15 +36,15 @@ def index(request):
             return render(request, 'flipkart/index.html')
         else:
             return render(request, 'flipkart/authentication.html')
-    
-        
+
+
 def signup_user(request):
 
     if request.method == "POST":
         name = request.POST['username']
         email = request.POST['email']
         password = request.POST['password']
-        
+
         isPremium = 0
 
         try:
@@ -52,7 +52,7 @@ def signup_user(request):
             curr_user['uid']=user.uid
             uid = user.uid
             name = user.display_name
-    
+
         except Exception as e:
             if type(e).__name__=='ValueError':
                 context = {
@@ -96,7 +96,7 @@ def signup_user(request):
             response.set_cookie('session', session_cookie, expires=expires)
             print('cookie created successfully')
             return response
-    
+
     context = {
         'error_in': 'signup'
         }
@@ -116,7 +116,7 @@ def login_user(request):
         "password": password,
         "returnSecureToken": True
         })
-        
+
         r = requests.post(token_url, data=payload)
         resp = r.json()
         if r.status_code == 200:
@@ -127,7 +127,7 @@ def login_user(request):
 
             session_cookie = firebase_admin.auth.create_session_cookie(idToken, expires_in)
             request.session['uid'] = uid
-            
+
             response = HttpResponseRedirect(reverse('flipkart:index'))
 
             response.set_cookie('session', session_cookie, expires=expires)
@@ -156,19 +156,19 @@ def search_product(request):
 
     if request.method == 'GET':
         query = request.GET.get("q", False)
-        
-        HEADERS = { 
-            "Fk-Affiliate-Id": "shaikhajw", 
+
+        HEADERS = {
+            "Fk-Affiliate-Id": "shaikhajw",
             "Fk-Affiliate-Token": "431799c9268040bebdb683698d6736da"
             }
 
-        PARAMS = { 
-                "query": query, 
+        PARAMS = {
+                "query": query,
                 "resultCount": 5
                 }
-        URL = "https://affiliate-api.flipkart.net/affiliate/1.0/search.json" 
+        URL = "https://affiliate-api.flipkart.net/affiliate/1.0/search.json"
 
-        r = requests.get(url = URL, params = PARAMS, headers=HEADERS) 
+        r = requests.get(url = URL, params = PARAMS, headers=HEADERS)
 
         if r.status_code == 200 :
             data = r.json()
@@ -189,18 +189,13 @@ def search_product(request):
 
                 timestamp = int(time.time())
 
-                # description = "|||".join(description)
-
                 product_save = {
-                    'product_id': product_id,
                     'product_link': product_link,
                     'product_name': product_name,
                     'current_price': current_price,
                     'description': description,
                     'image_link': image_link
                 }
-
-                products.append(product_save)
 
                 # checking presence of the particular product in the database previously
                 snapshot = root.child('products').child(product_id).get()
@@ -217,11 +212,14 @@ def search_product(request):
                         'cost_price': cost_price
                     }
 
+                product_save['product_id'] = product_id
+                products.append(product_save)
+
                 # adding price history
                 root.child('history').child(product_id).child(str(timestamp)).set(history)
-            
+
             return render(request, 'flipkart/searched.html', {'result': products})
-        
+
         else:
             return render(request, 'flipkart/index.html')
 
@@ -237,7 +235,7 @@ def add_track(request, product_id):
                 messages.success(request, 'The product is being tracked already')
                 return display_track(request)
             else:
-                root.child('notifications').child(product_id).child('users').child(user_id).set(1)
+                root.child('notifications').child(product_id).child(user_id).set(1)
                 root.child('users').child(user_id).child('favourites').child(product_id).set(1)
                 return display_track(request)
         else:
@@ -284,10 +282,3 @@ def display_track(request):
             return render(request, 'flipkart/tracked.html', {'products':products})
         else:
             return render(request, 'flipkart/authentication.html')
-          
-        
-
-
-
-
-
