@@ -17,6 +17,10 @@ import time
 
 from .forms import UserForm
 
+# imports for mailing facility
+from django.core.mail import send_mail
+from traxee.settings import EMAIL_HOST_USER
+
 cred = credentials.Certificate('/home/nitin/Downloads/traxee/github/traxee/traxee-pr-301-firebase-adminsdk-y22ww-2e5aafb334.json')
 
 token_url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCRL8ifllPsdT1gFbu_88-hA82VguTCCPM"
@@ -28,6 +32,13 @@ default_app = firebase_admin.initialize_app(cred ,{
 root = db.reference()
 curr_user={}
 curr_user['uid']=None
+
+def signup_email(email_id, name):
+    subject = "Welcome {} to traXee".format(name)
+    message = "Hi {}, Welcome to traXee.\n A all time solution for tracking flipkart products. All your shoppings problems are ours now.\n Enjoying Using traXee \n Regards \n Founder \n Tanzeel Alam".format(name)
+    send_mail(subject, message, EMAIL_HOST_USER, [email_id], fail_silently = False)
+
+    return None
 
 def index(request):
 
@@ -75,6 +86,9 @@ def signup_user(request):
             new_user = root.child('users').child(uid).child('subscription').set(data)
 
         if user:
+            # sending a signup email to the new user
+            signup_email(email, name)
+
             payload = json.dumps({
                     "email": email,
                     "password": password,

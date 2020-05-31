@@ -1,29 +1,12 @@
 from __future__ import absolute_import, unicode_literals
 import random
 from celery.decorators import task
-
-import time
-
-from .views import root
-
 # firebase authentication and db reference
-import firebase_admin
-from firebase_admin import auth
-from firebase_admin import db
-from firebase_admin import credentials
-
+from .views import root
 # imports for mailing facility
 from django.core.mail import send_mail
 from traxee.settings import EMAIL_HOST_USER
-
-# cred = credentials.Certificate('/home/nitin/Downloads/traxee-pr-301-firebase-adminsdk-y22ww-2e5aafb334.json')
-# default_app = firebase_admin.initialize_app(cred ,{
-#     'databaseURL' : 'https://traxee-pr-301.firebaseio.com/'
-# })
-
-# root = db.reference()
-
-# flipkart api credentials
+import time
 HEADERS = {
             "Fk-Affiliate-Id": "shaikhajw",
             "Fk-Affiliate-Token": "431799c9268040bebdb683698d6736da"
@@ -69,10 +52,6 @@ def fetch():
 
 @task(name="daily_email")
 def email():
-
-    # send_mail('Celery Worked', 'Proof of the working task', EMAIL_HOST_USER, ['nitinchauhan1299@gmail.com'], fail_silently=False)
-    # return 'Done Mailed'
-
 
     snapshot = root.child('notifications').get()
 
