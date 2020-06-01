@@ -213,7 +213,7 @@ def search_product(request):
 
                 # checking presence of the particular product in the database previously
                 snapshot = root.child('products').child(product_id).get()
-
+                root.child('products').child(product_id).set(product_save)  
                 if snapshot is None:
                     root.child('products').child(product_id).set(product_save)
                 else:

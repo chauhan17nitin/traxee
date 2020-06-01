@@ -40,6 +40,7 @@ def fetch():
             timestamp = int(time.time())
 
             # adding price history
+            product_id = key
             root.child('history').child(product_id).child(str(timestamp)).set(history)
             product_ref = root.child('products').child(product_id)
             product_ref.update({
