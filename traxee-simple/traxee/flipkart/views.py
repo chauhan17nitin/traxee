@@ -277,7 +277,10 @@ def display_track(request):
     if request.method == 'GET':
         if request.COOKIES.get('session'):
             user_id = request.session['uid']
-            p = root.child('users').child(user_id).child('favourites').get()
+            p = root.child('users').child(user_id).child('favourites').get()        
+            print('...')    
+            if not p:
+                return render(request, 'flipkart/no_tracked.html')
             products=[]
             for key,_ in p.items():
                 detail={}

@@ -25,7 +25,7 @@ SECRET_KEY = 'fjxpp_s6b1p9r7_s5s$nxn3$4nf)yi5ihoc2%cp$58u&bv71wo'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['3.7.213.241']
+ALLOWED_HOSTS = ['3.7.213.241', '127.0.0.1']
 
 
 # Application definition
