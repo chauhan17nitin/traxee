@@ -21,7 +21,7 @@ from .forms import UserForm
 from django.core.mail import send_mail
 from traxee.settings import EMAIL_HOST_USER
 
-cred = credentials.Certificate('/home/nitin/Downloads/traxee/github/traxee/traxee-pr-301-firebase-adminsdk-y22ww-2e5aafb334.json')
+cred = credentials.Certificate('./../../traxee-pr-301-firebase-adminsdk-y22ww-2e5aafb334.json')
 
 token_url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCRL8ifllPsdT1gFbu_88-hA82VguTCCPM"
 
@@ -137,7 +137,7 @@ def login_user(request):
             idToken = str(resp['idToken'])
             expires = datetime.datetime.now() + expires_in
             uid = str(resp['localId'])
-
+            print(uid)
 
             session_cookie = firebase_admin.auth.create_session_cookie(idToken, expires_in)
             request.session['uid'] = uid
