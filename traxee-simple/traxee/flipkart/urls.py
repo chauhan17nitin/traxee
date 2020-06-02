@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^add_track/(?P<product_id>\w+)/$', views.add_track, name='add_track'),
     url(r'^track/$', views.display_track, name='track'),
     url(r'^(?P<product_id>\w+)/del_track/$', views.remove_track, name='delete_track'),
+    url(r'^(?P<product_id>\w+)/details/$', views.details, name='details'),
 ]

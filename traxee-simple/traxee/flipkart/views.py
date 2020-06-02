@@ -170,7 +170,7 @@ def search_product(request):
 
     if request.method == 'GET':
         query = request.GET.get("q", False)
-
+        print(query)
         HEADERS = {
             "Fk-Affiliate-Id": "shaikhajw",
             "Fk-Affiliate-Token": "431799c9268040bebdb683698d6736da"
@@ -299,3 +299,9 @@ def display_track(request):
             return render(request, 'flipkart/tracked.html', {'products':products})
         else:
             return render(request, 'flipkart/authentication.html')
+
+def details(request, product_id):
+    if request.method == 'GET':
+        if request.COOKIES.get('session'):
+            ref = root.child('history').child(product_id).get()
+            return render(request, 'flipkart/history.html', {'context' : ref})

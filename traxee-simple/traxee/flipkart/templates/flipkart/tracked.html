@@ -21,7 +21,7 @@
                             <h5 class="text-center">Price: Rs {{ product.product_price }}</h5>
 
                             <!-- View Details-->
-                                <a href="#" class="btn btn-primary btn-sm" role="button">Details</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{% url 'flipkart:details' product.product_id%}" class="btn btn-primary btn-sm" role="button">Details</a>&nbsp;&nbsp;&nbsp;&nbsp;
                             
                             <!-- Buy-->
                             <a href="{{ product.product_link }}" target="_blank" class="btn btn-success btn-sm" role="button">Buy</a>&nbsp;&nbsp;&nbsp;

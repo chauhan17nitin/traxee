@@ -1,0 +1,25 @@
+{% extends 'flipkart/base.html' %}
+{% load static %}
+
+{% block title %}Product History{% endblock %}
+{% block body %}
+
+    <table style="font-family: arial, sans-serif;border-collapse: collapse;width: 100%;">
+        <tr>
+            <th>Timestamp</th>
+            <th>Cost Price</th>
+            <th>Current Price</th>
+            <th>Discount</th>
+        </tr>
+        {% for key, val in context.items %}
+            <tr>
+                <td>{{key}}</td>
+                <td>{{val.cost_price.amount}}</td>
+                <td>{{val.current_price.amount}}</td>
+                <td>{{val.discount}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+
+{% endblock %}
