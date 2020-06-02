@@ -26,7 +26,7 @@ app.conf.beat_schedule = {
     },
     'add-every-day': {
         'task': 'fetch_every_day',
-        'schedule': crontab(hour = 0),
+        'schedule': crontab(hour = 23, minute=20),
     }
 
 }

@@ -27,5 +27,5 @@ and start the server again using command
 ```bash
 redis-server
 ```
-
-**currently the mailing functionality not working because celery scheduling tasks more than one time soon error will be solved**
+**New price fetched in every 24hrs updated at 11:20pm everyday**
+**currently the mailing functionality only works by sending udated price on every morning 7am**
