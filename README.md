@@ -13,7 +13,7 @@ python manage.py runserver
 ```
 As dependency for schedular tasks like fetching price of products every day it currently uses celery beats. And it needs redis to act as message broker.
 So install redis before running celery server
-Visit [here](https://www.codingforentrepreneurs.com/blog/celery-redis-django/) for more on Celery + Redis + Django.
+Visit [here](https://www.codingforentrepreneurs.com/blog/hello-linux-install-redis) for more on Celery + Redis + Django.
 ```bash
 brew install redis
 brew services start redis
