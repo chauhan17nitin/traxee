@@ -104,10 +104,11 @@ def signup_user(request):
 
 
             session_cookie = firebase_admin.auth.create_session_cookie(idToken, expires_in)
-            request.session['uid'] = uid
+            # request.session['uid'] = uid
 
             response = HttpResponseRedirect(reverse('flipkart:index'))
             response.set_cookie('session', session_cookie, expires=expires)
+            response.set_cookie('uid', uid, expires=expires)
             print('cookie created successfully')
             return response
 
@@ -140,11 +141,12 @@ def login_user(request):
             print(uid)
 
             session_cookie = firebase_admin.auth.create_session_cookie(idToken, expires_in)
-            request.session['uid'] = uid
+            # request.session['uid'] = uid
 
             response = HttpResponseRedirect(reverse('flipkart:index'))
 
             response.set_cookie('session', session_cookie, expires=expires)
+            response.set_cookie('uid', uid, expires=expires)
             print('cookie created successfully')
             return response
         else:
@@ -157,9 +159,10 @@ def logout_user(request):
 
     if request.method == 'GET':
         try:
-            del request.session['uid']
+            # del request.session['uid']
             response = HttpResponseRedirect(reverse('flipkart:login'))
             response.delete_cookie('session')
+            response.delete_cookie('uid')
             print('cookie deleted')
             return response
         except Exception as e:
@@ -213,24 +216,23 @@ def search_product(request):
 
                 # checking presence of the particular product in the database previously
                 snapshot = root.child('products').child(product_id).get()
-                root.child('products').child(product_id).set(product_save)  
+
                 if snapshot is None:
                     root.child('products').child(product_id).set(product_save)
+                    history = {
+                            'current_price': current_price,
+                            'discount': discount,
+                            'cost_price': cost_price
+                        }
+                    # adding price history for first time
+                    root.child('history').child(product_id).child(str(timestamp)).set(history)
                 else:
                     root.child('products').child(product_id).update({
                             'current_price': current_price
                         })
-                history = {
-                        'current_price': current_price,
-                        'discount': discount,
-                        'cost_price': cost_price
-                    }
 
                 product_save['product_id'] = product_id
                 products.append(product_save)
-
-                # adding price history
-                root.child('history').child(product_id).child(str(timestamp)).set(history)
 
             return render(request, 'flipkart/searched.html', {'result': products})
 
@@ -243,7 +245,8 @@ def add_track(request, product_id):
     if request.method == 'GET':
         if request.COOKIES.get('session'):
             # check how long session variable stays this is in testing mode
-            user_id = request.session['uid']
+            # user_id = request.session['uid']
+            user_id = request.COOKIES.get('uid')
             check = root.child('users').child(user_id).child('favourites').child(product_id).get()
             if check:
                 messages.success(request, 'The product is being tracked already')
@@ -261,8 +264,8 @@ def remove_track(request, product_id):
     # if request.method == 'GET':
     if request.COOKIES.get('session'):
         # check session variable stays how long
-        user_id = request.session['uid']
-
+        # user_id = request.session['uid']
+        user_id = request.COOKIES.get('uid')
         ref = root.child('notifications').child(product_id).child('users').child(user_id)
         ref.delete()
 
@@ -281,7 +284,13 @@ def display_track(request):
             print('...')    
             if not p:
                 return render(request, 'flipkart/no_tracked.html')
+            # user_id = request.session['uid']
+            user_id = request.COOKIES.get('uid')
+            p = root.child('users').child(user_id).child('favourites').get()
             products=[]
+            if p is None:
+                messages.success(request, 'Your Tracking Cart is Empty Please Search Products and add them to track')
+                return render(request, 'flipkart/tracked.html')
             for key,_ in p.items():
                 detail={}
                 d = root.child('products').child(key).get()
@@ -293,9 +302,6 @@ def display_track(request):
                 detail['product_link'] = d['product_link']
 
                 products.append(detail)
-            # print(products)
-
-
             return render(request, 'flipkart/tracked.html', {'products':products})
         else:
             return render(request, 'flipkart/authentication.html')

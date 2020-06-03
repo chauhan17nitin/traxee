@@ -1,5 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 import random
+import requests
 from celery.decorators import task
 # firebase authentication and db reference
 from .views import root

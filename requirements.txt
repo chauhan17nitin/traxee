@@ -10,7 +10,7 @@ celery==4.4.2
 certifi==2020.4.5.1
 chardet==3.0.4
 decorator==4.4.2
-Django @ file:///home/conda/feedstock_root/build_artifacts/django_1588599198340/work
+# Django @ file:///home/conda/feedstock_root/build_artifacts/django_1588599198340/work
 django-celery-beat==2.0.0
 django-celery-results==1.2.1
 django-cors-headers==3.2.1
