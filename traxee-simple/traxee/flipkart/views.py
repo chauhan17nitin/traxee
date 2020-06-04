@@ -282,8 +282,6 @@ def display_track(request):
             user_id = request.session['uid']
             p = root.child('users').child(user_id).child('favourites').get()        
             print('...')    
-            if not p:
-                return render(request, 'flipkart/no_tracked.html')
             # user_id = request.session['uid']
             user_id = request.COOKIES.get('uid')
             p = root.child('users').child(user_id).child('favourites').get()
@@ -309,5 +307,9 @@ def display_track(request):
 def details(request, product_id):
     if request.method == 'GET':
         if request.COOKIES.get('session'):
-            ref = root.child('history').child(product_id).get()
-            return render(request, 'flipkart/history.html', {'context' : ref})
+            ref_history = root.child('history').child(product_id).get()
+            ref_product = root.child('products').child(product_id).get()
+            return render(request, 'flipkart/history.html', context = {'history_json' : json.dumps(ref_history), 'product' : ref_product})
+
+
+

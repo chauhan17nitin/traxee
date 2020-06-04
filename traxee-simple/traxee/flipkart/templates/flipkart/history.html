@@ -3,23 +3,58 @@
 
 {% block title %}Product History{% endblock %}
 {% block body %}
+<div class="container" style="padding-bottom: 100px;">
 
-    <table style="font-family: arial, sans-serif;border-collapse: collapse;width: 100%;">
-        <tr>
-            <th>Timestamp</th>
-            <th>Cost Price</th>
-            <th>Current Price</th>
-            <th>Discount</th>
-        </tr>
-        {% for key, val in context.items %}
-            <tr>
-                <td>{{key}}</td>
-                <td>{{val.cost_price.amount}}</td>
-                <td>{{val.current_price.amount}}</td>
-                <td>{{val.discount}}</td>
-            </tr>
-        {% endfor %}
-    </table>
+    <div  style="display: block; margin-right: auto; margin-left: auto; width: 50%;">
+        <div class="thumbnail">
+            <a href="{{product.product_link}}">
+                <img alt="image" src="{{ product.image_link }}" class="img-responsive">
+            </a>
+            <div class="caption">
+                <h4 class="text-center">{{ product.product_name | truncatechars:30 }}</h4>
+                <h5 class="text-center">Price: Rs {{ product.current_price.amount }}</h5>
+            </div>
+        </div>
+    </div>
 
-
+    <canvas id="myChart" width="100%" height="40px"></canvas>
+</div>
+<script>
+const history = JSON.parse('{{ history_json | safe }}');
+var labels = [], data = [];
+Object.keys(history).forEach((key, index) => {
+    var time = new Date(key*1000).toLocaleDateString();
+    labels.push(time);
+    data.push(history[key].current_price.amount);
+} )
+//console.log(labels);
+//console.log(data);
+var ctx = document.getElementById('myChart');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'cost price',
+            data: data,
+            backgroundColor: [
+                'rgba(255, 206, 86, 0.2)',
+            ],
+            borderColor: [
+                'rgba(209, 10, 10, 1)',
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
 {% endblock %}
