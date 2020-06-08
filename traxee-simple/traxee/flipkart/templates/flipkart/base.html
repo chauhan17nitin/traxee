@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>{% block title %}traXee{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=sans-serif" rel="stylesheet" type="text/css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'flipkart/style.css' %}"/>
-    
+
 </head>
 <body>
     <nav class="navbar navbar-inverse">
@@ -41,7 +42,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li class="{% block team_active %}{% endblock %}">
                         <a href="#">
-                            <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>&nbsp; Team 
+                            <span class="glyphicon glyphicon-flash" aria-hidden="true"></span>&nbsp; Team
                         </a>
                     </li>
                     <li>

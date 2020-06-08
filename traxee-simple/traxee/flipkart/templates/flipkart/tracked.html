@@ -22,12 +22,12 @@
 
                             <!-- View Details-->
                                 <a href="#" class="btn btn-primary btn-sm" role="button">Details</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                            
+
                             <!-- Buy-->
                             <a href="{{ product.product_link }}" target="_blank" class="btn btn-success btn-sm" role="button">Buy</a>&nbsp;&nbsp;&nbsp;
-                            
+
                             <!-- Delete handler-->
-                                <a href="{% url 'flipkart:delete_track' product.product_id %}" class="btn btn-danger btn-sm" role="button">Delete</a>
+                                <button id="{{ product.product_id }}" class="btn btn-danger btn-sm" onClick="reply_click(this.id)">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -36,6 +36,6 @@
         {% endif %}
     </div>
 </div>
+{% load static %}
+<script src="{% static 'flipkart/tracked.js' %}"></script>
 {% endblock %}
-
-
