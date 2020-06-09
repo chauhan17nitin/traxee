@@ -310,10 +310,9 @@ def remove_track(request, product_id):
 
 
 def display_track(request):
-
     if request.method == 'GET':
         if request.COOKIES.get('session'):
-            user_id = request.session['uid']
+            user_id = request.COOKIES['uid']
             p = root.child('users').child(user_id).child('favourites').get()        
             print('...')    
             # user_id = request.session['uid']
@@ -334,6 +333,7 @@ def display_track(request):
                 detail['product_link'] = d['product_link']
 
                 products.append(detail)
+
             return render(request, 'flipkart/tracked.html', {'products':products})
         else:
             return render(request, 'flipkart/authentication.html')
