@@ -10,9 +10,9 @@
     <h4 class="text-center"><b>{{ none }}</b></h4>
     {% else %}
 
-        
 
-            
+
+
     <h2 class="text-center">Most Relevant Products from Flipkart</h2>
 
         <div class="row">
@@ -37,12 +37,13 @@
                                         <h4>{{ configuration }}</h4>
                                     {% endfor %}
                                     <span class="storefront_add_to_cart">
-                                        <a href="{% url 'flipkart:add_track' product.product_id %}" class="btn btn-primary btn-sm" role="button" >Track</a>
+                                        <button id="{{ product.product_id }}" class="btn btn-primary btn-sm" onClick="reply_click(this.id)">Track</button>
                                         <a href="{{ product.product_link }}" class="btn btn-primary btn-sm" target="_blank" role="button">Buy Now</a>
-                                    </span>                                    
+
+                                    </span>
                                 </td>
                                 <td>
-                                    <img src="{{ product.image_link }}" alt="product image"> 
+                                    <img src="{{ product.image_link }}" alt="product image">
                                 </td>
                             </tr>
                             {% endfor %}
@@ -53,5 +54,6 @@
         </div>
     {% endif %}
 </div>
-
+{% load static %}
+<script src="{% static 'flipkart/search.js' %}"></script>
 {% endblock %}

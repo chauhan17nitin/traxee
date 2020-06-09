@@ -12,6 +12,7 @@ import firebase_admin
 from firebase_admin import auth
 from firebase_admin import db
 from firebase_admin import credentials
+from django.http import JsonResponse
 
 import time
 
@@ -258,6 +259,36 @@ def add_track(request, product_id):
         else:
             return render(request, 'flipkart/authentication.html')
 
+def add_trackapi(request):
+    if request.method == "POST":
+        if request.COOKIES.get('session'):
+            user_id = request.COOKIES.get('uid')
+            product_id = request.POST.get('product_id')
+            check = root.child('users').child(user_id).child('favourites').child(product_id).get()
+            if check:
+                return JsonResponse({'message': 'Already on Track'}, status=403)
+            else:
+                root.child('notifications').child(product_id).child(user_id).set(1)
+                root.child('users').child(user_id).child('favourites').child(product_id).set(1)
+                return JsonResponse({'message': 'Added to tracks'}, status=200)
+        else:
+            return JsonResponse({'message': 'Login First'}, status=401)
+    else:
+        return JsonResponse({'message': 'Invalid Access'}, status=422)
+
+def remove_trackapi(request):
+    if request.method == "POST":
+        if request.COOKIES.get('session'):
+            user_id = request.COOKIES.get('uid')
+            product_id = request.POST.get('product_id')
+            ref = root.child('notifications').child(product_id).child('users').child(user_id)
+            ref.delete()
+            root.child('users').child(user_id).child('favourites').child(product_id).delete()
+            return JsonResponse({'message': 'Deleted'}, status = 200)
+        else:
+            return JsonResponse({'message': 'Login First'}, status=401)
+    else:
+        return JsonResponse({'message': 'Invalid Access'}, status=422)
 
 def remove_track(request, product_id):
 
@@ -273,6 +304,9 @@ def remove_track(request, product_id):
         return display_track(request)
     else:
         return render(request, 'flipkart/authentication.html')
+
+
+
 
 
 def display_track(request):
