@@ -13,6 +13,22 @@ HEADERS = {
             "Fk-Affiliate-Token": "431799c9268040bebdb683698d6736da"
             }
 
+from threading import Thread
+
+def email_notify(product_id, current_price, product_name):
+    snapshot = root.child('notifications').child('product_id').get()
+
+    if snapshot is not None:
+        for key, value in snapshot.items():
+            if float(current_price['amount']) < value:
+                user = auth.get_user(key)
+                subject = 'Update for {}'.format(product_name)
+                message = 'Hello Dear, the current price of your tracked product is {} which is less than the amount set by you'.format(str(current_price['amount']))
+                send_mail(subject, message, EMAIL_HOST_USER, [user.email], fail_silently = False)
+                print('Here we will have to mail to notify the person')
+            else:
+                pass
+
 @task(name="fetch_every_day")
 def fetch():
     URL = "https://affiliate-api.flipkart.net/affiliate/1.0/product.json"
@@ -29,6 +45,7 @@ def fetch():
             data = r.json()
             current_price = data['productBaseInfoV1']['flipkartSpecialPrice']
             cost_price = data['productBaseInfoV1']['flipkartSellingPrice']
+            product_name = data['productBaseInfoV1']['title']
 
             discount = ((cost_price['amount']-current_price['amount'])/cost_price['amount'])*100
             discount = int(discount)
@@ -47,22 +64,9 @@ def fetch():
             product_ref.update({
             'current_price': current_price
             })
+
+            Thread(target=email_notify, args=(product_id, current_price, product_name)).start()
         else:
             print('given product does not exists on flipkart')
 
     return 'Done'
-
-@task(name="daily_email")
-def email():
-
-    snapshot = root.child('notifications').get()
-
-    for key, value in snapshot.items():
-        current_price = root.child('products').child(key).child('current_price').get()
-        amount = current_price['amount']
-        subject = 'Tracked Product Updates'
-        message = 'Hello Dear, the current price of your tracked product is {}'.format(str(amount))
-        for _id in value.keys():
-            user = auth.get_user(_id)
-            send_mail(subject, message, EMAIL_HOST_USER, [user.email], fail_silently = False)
-    return 'Mails Done'

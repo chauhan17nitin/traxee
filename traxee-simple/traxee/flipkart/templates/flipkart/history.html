@@ -14,6 +14,11 @@
                 <h4 class="text-center">{{ product.product_name | truncatechars:30 }}</h4>
                 <h5 class="text-center">Price: Rs {{ product.current_price.amount }}</h5>
             </div>
+            {% for configuration in product.description %}
+                <h4 class="text-center">{{ configuration }}</h4>
+            {% endfor %}
+            <!-- Buy-->
+            <a href="{{ product.product_link }}" target="_blank" class="btn btn-success btn-sm" role="button">Buy</a>
         </div>
     </div>
 
@@ -56,5 +61,7 @@ var myChart = new Chart(ctx, {
         }
     }
 });
+
+
 </script>
 {% endblock %}

@@ -38,7 +38,8 @@
                                     {% endfor %}
                                     <span class="storefront_add_to_cart">
                                         <button id="{{ product.product_id }}" class="btn btn-primary btn-sm" onClick="reply_click(this.id)">Track</button>
-                                        <a href="{{ product.product_link }}" class="btn btn-primary btn-sm" target="_blank" role="button">Buy Now</a>
+                                        <a href="{% url 'flipkart:details' product.product_id %}" class="btn btn-primary btn-sm" role="button">History</a>
+                                        <a href="{{ product.product_link }}" class="btn btn-success btn-sm" target="_blank" role="button">Buy Now</a>
 
                                     </span>
                                 </td>
