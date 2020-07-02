@@ -21,10 +21,17 @@
             <a href="{{ product.product_link }}" target="_blank" class="btn btn-success btn-sm" role="button">Buy</a>
         </div>
     </div>
-
+    <div  id="slider"></div>
+    <form id="slider_form"  method="POST" >
+        {% csrf_token %}
+        <input name="price_input" id="price_input" type="number" class="form-control" placeholder="set price limit" />
+        <button id="slider_button" type="submit" class="btn btn-success submit_b" on >Submit</button>
+    </form>
     <canvas id="myChart" width="100%" height="40px"></canvas>
 </div>
 <script>
+
+//graph
 const history = JSON.parse('{{ history_json | safe }}');
 var labels = [], data = [];
 Object.keys(history).forEach((key, index) => {
@@ -62,6 +69,36 @@ var myChart = new Chart(ctx, {
     }
 });
 
+//slider
+var max_price = data[data.length-1];
+$("#slider").slider({
+    range: "min",
+    value: 1,
+    step: 10,
+    min: 0,
+    max: max_price,
+    slide: function( event, ui ) {
+        $( "#price_input" ).val(ui.value );
+    }
+});
+
+
+$("#price_input").change(function () {
+    var value = this.value;
+    value = Math.min(value, max_price)
+    console.log(value);
+    $("#price_input").val(value)
+    $("#slider").slider("value", parseInt(value));
+});
+
+
+
+$("#slider_form input").not("#slider_button").keydown(function(event) {
+    if (event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+  });
 
 </script>
 {% endblock %}

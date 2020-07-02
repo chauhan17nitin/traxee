@@ -344,6 +344,14 @@ def details(request, product_id):
             ref_history = root.child('history').child(product_id).get()
             ref_product = root.child('products').child(product_id).get()
             return render(request, 'flipkart/history.html', context = {'history_json' : json.dumps(ref_history), 'product' : ref_product})
+    if request.method == 'POST':
+        price = request.POST.get('price_input')
+        if price.isdigit():
+            user_id = request.COOKIES.get('uid')
+            root.child('notifications').child(product_id).child(user_id).set(price)
+            print(price, user_id, product_id)
+            return HttpResponseRedirect(request.path_info)
+
 
 
 

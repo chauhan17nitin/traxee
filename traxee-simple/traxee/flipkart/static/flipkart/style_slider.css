@@ -1,0 +1,27 @@
+div.ui-slider-range.ui-widget-header.ui-slider-range-min{
+    background: rgba(255, 206, 86, 0.2);
+}
+a.ui-slider-handle.ui-state-default.ui-corner-all{
+    background: rgba(209, 10, 10, 1);
+}
+#slider{
+    margin-top: 50px;
+    margin-bottom: 10px;
+    width: 50%;
+    display: block; 
+    margin-right: auto; 
+    margin-left: auto;
+}
+.form-control{
+    width: 200px;
+    display: block; 
+    margin-right: auto; 
+    margin-left: auto;
+}
+.submit_b{
+    margin-bottom: 50px;
+    margin-top: 10px;
+    display: block; 
+    margin-right: auto; 
+    margin-left: auto;
+}

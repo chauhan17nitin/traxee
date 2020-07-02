@@ -17,7 +17,6 @@ from threading import Thread
 
 def email_notify(product_id, current_price, product_name):
     snapshot = root.child('notifications').child('product_id').get()
-
     if snapshot is not None:
         for key, value in snapshot.items():
             if float(current_price['amount']) < value:
