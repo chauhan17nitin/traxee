@@ -22,7 +22,7 @@ from .forms import UserForm
 from django.core.mail import send_mail
 from traxee.settings import EMAIL_HOST_USER
 
-cred = credentials.Certificate('./../../traxee-pr-301-firebase-adminsdk-y22ww-2e5aafb334.json')
+cred = credentials.Certificate('traxee-pr-301-firebase-adminsdk-y22ww-2e5aafb334.json')
 
 token_url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCRL8ifllPsdT1gFbu_88-hA82VguTCCPM"
 
@@ -264,6 +264,8 @@ def add_trackapi(request):
         if request.COOKIES.get('session'):
             user_id = request.COOKIES.get('uid')
             product_id = request.POST.get('product_id')
+            price_input = request.POST.get('price_input')
+            print('f', product_id)
             check = root.child('users').child(user_id).child('favourites').child(product_id).get()
             if check:
                 return JsonResponse({'message': 'Already on Track'}, status=403)
@@ -344,6 +346,9 @@ def details(request, product_id):
             ref_history = root.child('history').child(product_id).get()
             ref_product = root.child('products').child(product_id).get()
             return render(request, 'flipkart/history.html', context = {'history_json' : json.dumps(ref_history), 'product' : ref_product})
+        else:
+            return render(request, 'flipkart/authentication.html')
+
     if request.method == 'POST':
         price = request.POST.get('price_input')
         if price.isdigit():
@@ -352,6 +357,15 @@ def details(request, product_id):
             print(price, user_id, product_id)
             return HttpResponseRedirect(request.path_info)
 
-
+def brief_history(request):
+    if request.method == 'POST':
+        if request.COOKIES.get('session'):
+            product_id = request.POST.get('product_id')
+            print('d',product_id)
+            ref_history = root.child('history').child(product_id).get()
+            ref_product = root.child('products').child(product_id).get()
+            return JsonResponse({'history_json' : json.dumps(ref_history), 'product' : ref_product})
+        else:
+            return render(request, 'flipkart/authentication.html')
 
 
