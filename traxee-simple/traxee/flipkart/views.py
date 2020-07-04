@@ -276,7 +276,7 @@ def add_trackapi(request):
         else:
             return JsonResponse({'message': 'Login First'}, status=401)
     else:
-        return JsonResponse({'message': 'Invalid Access'}, status=422)
+        return JsonResponse({'message': 'Invalid Access'}, status=500)
 
 def remove_trackapi(request):
     if request.method == "POST":
