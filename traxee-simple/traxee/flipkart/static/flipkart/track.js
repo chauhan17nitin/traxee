@@ -5,14 +5,16 @@ function getCookieValue(a) {
 }
 
 const trackForm = document.querySelector('.slider_form');
+const button = document.getElementById("slider_button");
 
 trackForm.addEventListener('submit', (e) => {
 	e.preventDefault();
+    button.innerHTML = "Adding... ";
 	const product_id = trackForm['product_id'].value;
 	const price_input = trackForm['price_input'].value;
-  
+
 	console.log(product_id);
-  console.log(price_input);
+    console.log(price_input);
 
 	const request = new XMLHttpRequest();
 	request.open('POST', '/add_trackapi/');
@@ -30,9 +32,11 @@ trackForm.addEventListener('submit', (e) => {
 	request.onload = () => {
 		if (request.status == 403){
 			alert('Aleardy on track');
+            button.innerHTML = "On Track";
 
-    } else if (request.status == 200) {
-
+        }
+        else if (request.status == 200) {
+            button.innerHTML = "On Track";
 		}
 		else if (request.status) {
 			alert('Login to your account first');

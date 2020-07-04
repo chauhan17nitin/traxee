@@ -69,7 +69,7 @@
   				       <form id="slider_form" class="slider_form" method="post">
   					       {% csrf_token %}
   					       <input name="price_input" id="price_input" type="number" class="form-control" placeholder="set price limit"  required/>
-  					       <input type="text" id="product_id" name="product_id">
+  					       <input type="hidden" id="product_id" name="product_id">
   					       <button id="slider_button" type="submit" class="btn btn-success submit_b" >Track</button>
   				       </form>
   				       <canvas id="myChart" width="100%" height="40px"></canvas>
