@@ -270,8 +270,8 @@ def add_trackapi(request):
             if check:
                 return JsonResponse({'message': 'Already on Track'}, status=403)
             else:
-                root.child('notifications').child(product_id).child(user_id).set(1)
-                root.child('users').child(user_id).child('favourites').child(product_id).set(1)
+                root.child('notifications').child(product_id).child(user_id).set(price_input)
+                root.child('users').child(user_id).child('favourites').child(product_id).set(price_input)
                 return JsonResponse({'message': 'Added to tracks'}, status=200)
         else:
             return JsonResponse({'message': 'Login First'}, status=401)
@@ -283,8 +283,9 @@ def remove_trackapi(request):
         if request.COOKIES.get('session'):
             user_id = request.COOKIES.get('uid')
             product_id = request.POST.get('product_id')
-            ref = root.child('notifications').child(product_id).child('users').child(user_id)
-            ref.delete()
+            print(product_id)
+
+            root.child('notifications').child(product_id).child(user_id).delete()
             root.child('users').child(user_id).child('favourites').child(product_id).delete()
             return JsonResponse({'message': 'Deleted'}, status = 200)
         else:
