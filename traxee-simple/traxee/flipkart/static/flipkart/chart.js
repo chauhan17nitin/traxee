@@ -1,5 +1,5 @@
-console.log('file connected');
-
+console.log('file connected chart.js');
+const product_id = document.getElementById('product_id');
 function getCookieValue(a) {
     var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
     return b ? b.pop() : '';
@@ -7,12 +7,12 @@ function getCookieValue(a) {
 
 function get_chart(clicked_id){
 	const button = document.getElementById(clicked_id);
-	
-//	const product_id = document.getElementById('product_id');
+
+
 //	const price_input = document.getElementById('price_input');
-	
+
 	product_id.value = clicked_id;
-												
+
 	const request = new XMLHttpRequest();
 	request.open('POST', '/brief_history/');
 
@@ -28,20 +28,14 @@ function get_chart(clicked_id){
 	request.onload = () => {
 
 		const res = JSON.parse(request.response);
-		console.log(typeof res);
 		//graph
 		const history = JSON.parse(res.history_json);
-		console.log(typeof history);
 		var labels = [], data = [];
 		Object.keys(history).forEach((key, index) => {
-			console.log(history[key])
 			var time = new Date(key*1000).toLocaleDateString();
 			labels.push(time);
-			console.log(history[key].current_price.amount);
 			data.push(history[key].current_price.amount);
 		} )
-		console.log(labels);
-		console.log(data);
 		var ctx = document.getElementById('myChart');
 		var myChart = new Chart(ctx, {
 			type: 'line',
@@ -73,7 +67,7 @@ function get_chart(clicked_id){
 		//slider
 		var max_price = data[data.length-1];
 		price_input.value = max_price;
-		
+
 		$("#slider").slider({
 			range: "min",
 			value: 1,
