@@ -53,32 +53,33 @@
                             </tr>
                             {% endfor %}
 
-                            <div class="modal fade" id="myModal" role="dialog">
-                              <div class="modal-dialog">
-                                <!-- Modal Content -->
-                                <div class="model-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Price History</h4>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <div  id="slider"></div>
-                                    <form id="slider_form" class="slider_form" action="{% url 'flipkart:add_trackapi' %}" method="post">
-                                      {% csrf_token %}
-                                      <input type="text" id="product_name" >
-          														<input name="price_input" id="price_input" type="number" class="form-control" placeholder="set price limit"  required/>
-          														<input type="text" id="product_id" name="product_id" >
-          														<button id="slider_button" type="submit" class="btn btn-success submit_b" onClick ="reply_click()" >Track</button>
-                                    </form>
-                                    <canvas id="myChart" width="100%" height="40px"></canvas>
-                                </div>
-                                </div>
-                              </div>
-                            </div>
+                            
                         </tbody>
                     </table>
                 </div>
             </div>
+			
         </div>
     {% endif %}
+</div>
+<div class="modal fade" id="myModal" role="dialog">
+	<div class="modal-dialog">
+		<!-- Modal Content -->
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Price History</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<div  id="slider"></div>
+				<form id="slider_form" class="slider_form" method="post">
+					{% csrf_token %}
+					<input name="price_input" id="price_input" type="number" class="form-control" placeholder="set price limit"  required/>
+					<input type="text" id="product_id" name="product_id">
+					<button id="slider_button" type="submit" class="btn btn-success submit_b" >Track</button>
+				</form>
+				<canvas id="myChart" width="100%" height="40px"></canvas>
+			</div>
+		</div>
+	</div>
 </div>
 {% load static %}
 <script src="{% static 'flipkart/chart.js' %}"></script>

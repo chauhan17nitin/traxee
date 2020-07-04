@@ -1,32 +1,19 @@
-function reply_click(){
-	var x = document.getElementById("slider_form").submit();
-	const button = document.getElementById("slider_button");
-	const request = new XMLHttpRequest();
-	request.open('POST', '/add_trackapi/');
-	
-	button.innerHTML = "Adding... ";
-	console.log(x)
-	
-	request.onload = () => {
-		if (request.status == 403){
-			alert('Aleardy on track');
-			button.innerHTML = "On Track";}
-		else if (request.status == 200) {
-			button.innerHTML = "On Track";
-		}
-		else if (request.status) {
-			alert('Login to your account first');
-			window.location.replace('/login');}
-	}
 
-
+function getCookieValue(a) {
+    var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
+    return b ? b.pop() : '';
 }
 
 
-function r_click(product_id){
 
-	const button = document.getElementById("slider_button");
-	button.innerHTML = "Adding... ";
+var trackForm = document.getElementById('slider_form');
+
+trackForm.addEventListener('submit', function(){
+	e.preventDefault();
+	const product_id = trackForm['product_id'].value;
+	const price_input = trackForm['price_input'].value;
+	console.log(product_id);
+
 	const request = new XMLHttpRequest();
 	request.open('POST', '/add_trackapi/');
 
@@ -36,8 +23,9 @@ function r_click(product_id){
 
 	const data = new FormData();
 	data.append('product_id', product_id);
+	data.append('price_input', price_input);
 	request.send(data);
-	console.log(product_id);
+	button.innerHTML = "Adding... ";
 
 	request.onload = () => {
 		if (request.status == 403){
@@ -49,6 +37,6 @@ function r_click(product_id){
 		else if (request.status) {
 			alert('Login to your account first');
 			window.location.replace('/login');}
-	}
-
 }
+});
+

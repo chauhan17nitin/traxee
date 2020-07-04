@@ -1,10 +1,5 @@
 console.log('file connected');
 
-const product_id = document.getElementById("product_id");
-const product_name = document.getElementById("product_name");
-const price_input = document.getElementById("price_input");
-
-
 function getCookieValue(a) {
     var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
     return b ? b.pop() : '';
@@ -12,13 +7,12 @@ function getCookieValue(a) {
 
 function get_chart(clicked_id){
 	const button = document.getElementById(clicked_id);
-
-  // auto populate productId name and current amount
-  product_name.value = clicked_id;
-  product_id.value = clicked_id;
-  // this amount must reflect the slider
-  price_input.value = 10000;
-
+	
+//	const product_id = document.getElementById('product_id');
+//	const price_input = document.getElementById('price_input');
+	
+	product_id.value = clicked_id;
+												
 	const request = new XMLHttpRequest();
 	request.open('POST', '/brief_history/');
 
@@ -29,7 +23,7 @@ function get_chart(clicked_id){
 	const id = new FormData();
 	id.append('product_id', clicked_id);
 	request.send(id);
-  console.log('request sent');
+	console.log('request sent');
 
 	request.onload = () => {
 
@@ -78,6 +72,8 @@ function get_chart(clicked_id){
 
 		//slider
 		var max_price = data[data.length-1];
+		price_input.value = max_price;
+		
 		$("#slider").slider({
 			range: "min",
 			value: 1,
