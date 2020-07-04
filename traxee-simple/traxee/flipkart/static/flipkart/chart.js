@@ -1,5 +1,10 @@
 console.log('file connected');
 
+const product_id = document.getElementById("product_id");
+const product_name = document.getElementById("product_name");
+const price_input = document.getElementById("price_input");
+
+
 function getCookieValue(a) {
     var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
     return b ? b.pop() : '';
@@ -7,21 +12,27 @@ function getCookieValue(a) {
 
 function get_chart(clicked_id){
 	const button = document.getElementById(clicked_id);
-	
+
+  // auto populate productId name and current amount
+  product_name.value = clicked_id;
+  product_id.value = clicked_id;
+  // this amount must reflect the slider
+  price_input.value = 10000;
+
 	const request = new XMLHttpRequest();
 	request.open('POST', '/brief_history/');
 
 	const header =  "X-CSRFToken";
 	const token = getCookieValue('csrftoken');
 	request.setRequestHeader(header, token);
-	
+
 	const id = new FormData();
 	id.append('product_id', clicked_id);
 	request.send(id);
-  	console.log('request sent');
-	
+  console.log('request sent');
+
 	request.onload = () => {
-		
+
 		const res = JSON.parse(request.response);
 		console.log(typeof res);
 		//graph

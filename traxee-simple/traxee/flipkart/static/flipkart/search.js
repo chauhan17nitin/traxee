@@ -1,4 +1,4 @@
-console.log('file connected');
+console.log('file connected search.js');
 
 function getCookieValue(a) {
     var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
