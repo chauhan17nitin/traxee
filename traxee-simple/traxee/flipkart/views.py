@@ -31,8 +31,12 @@ default_app = firebase_admin.initialize_app(cred ,{
 })
 
 root = db.reference()
-curr_user={}
-curr_user['uid']=None
+
+# Credentials header for flipkart api
+HEADERS = {
+    "Fk-Affiliate-Id": "shaikhajw",
+    "Fk-Affiliate-Token": "431799c9268040bebdb683698d6736da"
+    }
 
 def signup_email(email_id, name):
     subject = "Welcome {} to traXee".format(name)
@@ -61,7 +65,6 @@ def signup_user(request):
 
         try:
             user = firebase_admin.auth.create_user(email=email, password=password, display_name=name)
-            curr_user['uid']=user.uid
             uid = user.uid
             name = user.display_name
 
@@ -174,18 +177,12 @@ def search_product(request):
 
     if request.method == 'GET':
         query = request.GET.get("q", False)
-        print(query)
-        HEADERS = {
-            "Fk-Affiliate-Id": "shaikhajw",
-            "Fk-Affiliate-Token": "431799c9268040bebdb683698d6736da"
-            }
 
         PARAMS = {
                 "query": query,
                 "resultCount": 5
                 }
         URL = "https://affiliate-api.flipkart.net/affiliate/1.0/search.json"
-
         r = requests.get(url = URL, params = PARAMS, headers=HEADERS)
 
         if r.status_code == 200 :
@@ -241,24 +238,7 @@ def search_product(request):
             return render(request, 'flipkart/index.html')
 
 
-def add_track(request, product_id):
-
-    if request.method == 'GET':
-        if request.COOKIES.get('session'):
-            # check how long session variable stays this is in testing mode
-            # user_id = request.session['uid']
-            user_id = request.COOKIES.get('uid')
-            check = root.child('users').child(user_id).child('favourites').child(product_id).get()
-            if check:
-                messages.success(request, 'The product is being tracked already')
-                return display_track(request)
-            else:
-                root.child('notifications').child(product_id).child(user_id).set(1)
-                root.child('users').child(user_id).child('favourites').child(product_id).set(1)
-                return display_track(request)
-        else:
-            return render(request, 'flipkart/authentication.html')
-
+# Will be triggered from JS
 def add_trackapi(request):
     if request.method == "POST":
         if request.COOKIES.get('session'):
@@ -278,6 +258,8 @@ def add_trackapi(request):
     else:
         return JsonResponse({'message': 'Invalid Access'}, status=500)
 
+
+# this will be triggered from JS
 def remove_trackapi(request):
     if request.method == "POST":
         if request.COOKIES.get('session'):
@@ -293,31 +275,12 @@ def remove_trackapi(request):
     else:
         return JsonResponse({'message': 'Invalid Access'}, status=422)
 
-def remove_track(request, product_id):
-
-    # if request.method == 'GET':
-    if request.COOKIES.get('session'):
-        # check session variable stays how long
-        # user_id = request.session['uid']
-        user_id = request.COOKIES.get('uid')
-        ref = root.child('notifications').child(product_id).child('users').child(user_id)
-        ref.delete()
-
-        root.child('users').child(user_id).child('favourites').child(product_id).delete()
-        return display_track(request)
-    else:
-        return render(request, 'flipkart/authentication.html')
-
-
-
-
-
 def display_track(request):
     if request.method == 'GET':
         if request.COOKIES.get('session'):
             user_id = request.COOKIES['uid']
-            p = root.child('users').child(user_id).child('favourites').get()        
-            print('...')    
+            p = root.child('users').child(user_id).child('favourites').get()
+            print('...')
             # user_id = request.session['uid']
             user_id = request.COOKIES.get('uid')
             p = root.child('users').child(user_id).child('favourites').get()
@@ -368,5 +331,3 @@ def brief_history(request):
             return JsonResponse({'history_json' : json.dumps(ref_history), 'product' : ref_product})
         else:
             return render(request, 'flipkart/authentication.html')
-
-

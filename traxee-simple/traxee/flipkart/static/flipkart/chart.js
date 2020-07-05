@@ -9,8 +9,6 @@ function get_chart(clicked_id){
 	const button = document.getElementById(clicked_id);
 
 
-//	const price_input = document.getElementById('price_input');
-
 	product_id.value = clicked_id;
 
 	const request = new XMLHttpRequest();
