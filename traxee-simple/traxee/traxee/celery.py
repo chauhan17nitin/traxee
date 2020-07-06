@@ -21,7 +21,7 @@ from celery.schedules import crontab
 app.conf.beat_schedule = {
     'add-every-day': {
         'task': 'fetch_every_day',
-        'schedule': crontab(hour = 12, minute = 00),
+        'schedule': crontab(hour = 13, minute = 40),
         # 'args': (16, 16),
     },
 

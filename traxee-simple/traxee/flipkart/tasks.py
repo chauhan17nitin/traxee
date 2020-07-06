@@ -58,13 +58,14 @@ def fetch():
 
             # adding price history
             product_id = key
-            root.child('history').child(product_id).child(str(timestamp)).set(history)
-            product_ref = root.child('products').child(product_id)
-            product_ref.update({
-            'current_price': current_price
-            })
+            # root.child('history').child(product_id).child(str(timestamp)).set(history)
+            # product_ref = root.child('products').child(product_id)
+            # product_ref.update({
+            # 'current_price': current_price
+            # })
 
-            Thread(target=email_notify, args=(product_id, current_price, product_name)).start()
+            Thread(target=email_notify, args=(product_id, current_price, product_name,)).start()
+            print('Mail triggered')
         else:
             print('given product does not exists on flipkart')
 
