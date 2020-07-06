@@ -1,0 +1,106 @@
+{% extends 'flipkart/base.html' %}
+{% load static %}
+{% block title %}Team{% endblock %}
+
+{% block body %}
+    
+<div class="demo">
+    <div class="container">
+      <span style="display: flex; align-items: center; justify-content: center;">
+        <h2 style="text-decoration: underline;" >Our Team</h2>
+      </span>
+      <div class="row">
+        <div id="testimonial-slider" class="owl-carousel">
+          <div class="testimonial">
+            <span class="icon fa fa-quote-left"></span>
+            <p class="description">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+            </p>
+            <div class="testimonial-content">
+              <div class="pic">
+                <img src="{% static 'flipkart/img/abhay.jpg' %}" alt="">
+              </div>
+              <h3 class="name">Abhay Kesharwani</h3>
+              <span class="title">Web Developer</span>
+              <div class="social-icons" style="padding-bottom: 50px;">
+                <a target=”_blank” href="https://github.com/abhaykes1/"><i class="fa fa-github" aria-hidden="true"></i></a>
+                <a target=”_blank” href="http://linkedin.com/in/abhaykes1"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+              </div> 
+            </div>
+            
+          </div>
+          <div class="testimonial">
+            <span class="icon fa fa-quote-left"></span>
+            <p class="description">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+            </p>
+            <div class="testimonial-content">
+              <div class="pic">
+                <img src="{% static 'flipkart/img/ajwad.webp' %}" alt="">
+              </div>
+              <h3 class="name">Ajwad Shaikh</h3>
+              <span class="title">Web Developer</span>
+              <div class="social-icons" >
+                <a target=”_blank” href="https://github.com/ajwad-shaikh/"><i class="fa fa-github" aria-hidden="true"></i></a>
+                <a target=”_blank” href="http://linkedin.com/in/abhaykes1"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+              </div> 
+            </div>
+          </div>
+          <div class="testimonial">
+            <span class="icon fa fa-quote-left"></span>
+            <p class="description">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+            </p>
+            <div class="testimonial-content">
+              <div class="pic">
+                <img src="{% static 'flipkart/img/nitin.jpg' %}" alt="">
+              </div>
+              <h3 class="name">Nitin Chauhan</h3>
+              <span class="title">Web Developer</span>
+              <div class="social-icons" >
+                <a target=”_blank” href="https://github.com/hammer1234567/"><i class="fa fa-github" aria-hidden="true"></i></a>
+                <a target=”_blank” href="http://linkedin.com/in/abhaykes1"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+              </div> 
+            </div>
+          </div>
+          <div class="testimonial">
+            <span class="icon fa fa-quote-left"></span>
+            <p class="description">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+            </p>
+            <div class="testimonial-content">
+              <div class="pic">
+                <img src="{% static 'flipkart/img/srijan.jpg' %}" alt="">
+              </div>
+              <h3 class="name">Srijan Singh</h3>
+              <span class="title">Web Developer</span>
+              <div class="social-icons" >
+                <a target=”_blank” href="https://github.com/srijansingh53/"><i class="fa fa-github" aria-hidden="true"></i></a>
+                <a target=”_blank” href="http://linkedin.com/in/abhaykes1"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+              </div> 
+            </div>
+          </div>
+                  <div class="testimonial">
+            <span class="icon fa fa-quote-left"></span>
+            <p class="description">
+              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+            </p>
+            <div class="testimonial-content">
+              <div class="pic">
+                <img src="{% static 'flipkart/img/tanzeel.jpg' %}" alt="">
+              </div>
+              <h3 class="name">Tanzeel Alam</h3>
+              <span class="title">Web Developer</span>
+              <div class="social-icons" >
+                <a target=”_blank” href="https://github.com/abhaykes1/"><i class="fa fa-github" aria-hidden="true"></i></a>
+                <a target=”_blank” href="http://linkedin.com/in/abhaykes1"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+              </div> 
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<script src="{% static 'flipkart/style_team.js' %}"></script>
+
+{% endblock body %}

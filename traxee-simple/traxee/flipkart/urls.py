@@ -14,5 +14,6 @@ urlpatterns = [
     url(r'^remove_trackapi/', views.remove_trackapi, name='remove_trackapi'),
     url(r'^track/$', views.display_track, name='track'),
     url(r'^track/(?P<product_id>\w+)/$', views.details, name='details'),
+    url(r'^team/$', views.team, name='team'),
 
 ]
