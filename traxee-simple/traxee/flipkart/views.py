@@ -40,7 +40,7 @@ HEADERS = {
 
 def signup_email(email_id, name):
     subject = "Welcome {} to traXee".format(name)
-    message = "Hi {}, Welcome to traXee.\n A all time solution for tracking flipkart products. All your shoppings problems are ours now.\n Enjoying Using traXee \n Regards \n Founder \n Tanzeel Alam".format(name)
+    message = "Hi {},\nWelcome to traXee.\nAn all time solution for tracking flipkart products. All your shoppings problems are ours now.\nEnjoy Using traXee.\n\nRegards\nTeam traXee".format(name)
     send_mail(subject, message, EMAIL_HOST_USER, [email_id], fail_silently = False)
 
     return None

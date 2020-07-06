@@ -4,6 +4,7 @@ import requests
 from celery.decorators import task
 # firebase authentication and db reference
 from .views import root
+from .views import firebase_admin
 # imports for mailing facility
 from django.core.mail import send_mail
 from traxee.settings import EMAIL_HOST_USER
@@ -16,13 +17,14 @@ HEADERS = {
 from threading import Thread
 
 def email_notify(product_id, current_price, product_name):
-    snapshot = root.child('notifications').child('product_id').get()
+    print('Mail task received')
+    snapshot = root.child('notifications').child(product_id).get()
     if snapshot is not None:
         for key, value in snapshot.items():
-            if float(current_price['amount']) < value:
-                user = auth.get_user(key)
+            if float(current_price['amount']) < float(value):
+                user = firebase_admin.auth.get_user(key)
                 subject = 'Update for {}'.format(product_name)
-                message = 'Hello Dear, the current price of your tracked product is {} which is less than the amount set by you'.format(str(current_price['amount']))
+                message = 'Hello Customer,\n\nThis is to notify you that the current price of your tracked product is {} which is now less than the amount set by you.\n\nRegards\nTeam traXee'.format(str(current_price['amount']))
                 send_mail(subject, message, EMAIL_HOST_USER, [user.email], fail_silently = False)
                 print('Here we will have to mail to notify the person')
             else:
@@ -58,11 +60,11 @@ def fetch():
 
             # adding price history
             product_id = key
-            # root.child('history').child(product_id).child(str(timestamp)).set(history)
-            # product_ref = root.child('products').child(product_id)
-            # product_ref.update({
-            # 'current_price': current_price
-            # })
+            root.child('history').child(product_id).child(str(timestamp)).set(history)
+            product_ref = root.child('products').child(product_id)
+            product_ref.update({
+            'current_price': current_price
+            })
 
             Thread(target=email_notify, args=(product_id, current_price, product_name,)).start()
             print('Mail triggered')
