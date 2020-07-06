@@ -20,8 +20,8 @@ def debug_task(self):
 from celery.schedules import crontab
 app.conf.beat_schedule = {
     'add-every-day': {
-        'task': 'daily_email',
-        'schedule': crontab(hour = 7, minute = 00),
+        'task': 'fetch_every_day',
+        'schedule': crontab(hour = 12, minute = 00),
         # 'args': (16, 16),
     },
 
