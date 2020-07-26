@@ -331,3 +331,6 @@ def brief_history(request):
             return JsonResponse({'history_json' : json.dumps(ref_history), 'product' : ref_product})
         else:
             return render(request, 'flipkart/authentication.html')
+
+def team(request):
+    return render(request, 'flipkart/team.html')

@@ -1,0 +1,124 @@
+body {
+    font-family: tahoma;
+  
+  }
+  
+  .testimonial {
+    background-color: white;
+    text-align: center;
+    padding: 30px 30px 50px;
+    margin: 100px 15px 160px;
+    position: relative;
+    height: 500px;
+  }
+  
+  .testimonial::before,
+  .testimonial::after {
+    content: "";
+    border-top: 40px solid white;
+    border-right: 125px solid transparent;
+    position: absolute;
+    bottom: -40px;
+    left: 0;
+  }
+  
+  .testimonial::after {
+    border-right: none;
+    border-left: 125px solid transparent;
+    left: auto;
+    right: 0;
+  }
+  
+  .testimonial .icon {
+    display: inline-block;
+    font-size: 80px;
+    color: #016d9b;
+    margin-bottom: 20px;
+    opacity: 0.6;
+  }
+  
+  .testimonial .description {
+    font-size: 14px;
+    color: #777;
+    text-align: justify;
+    margin-bottom: 30px;
+    opacity: 0.9;
+  }
+  
+  .testimonial .testimonial-content {
+    width: 100%;
+    left: 0;
+    position: absolute;
+  }
+  
+  .testimonial .pic {
+    display: inline-block;
+    border: 4px solid white;
+    border-radius: 50%;
+    box-shadow: 0 0 4px 4px #016d9b;
+    overflow: hidden;
+    z-index: 1;
+    position: relative;
+  }
+  
+  .testimonial .pic img {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .testimonial .name {
+    font-size: 15px;
+    font-weight: bold;
+    color: black;
+    text-transform: capitalize;
+    margin: 10px 0 5px 0;
+  }
+  
+  .testimonial .title {
+    display: block;
+    font-size: 14px;
+    color: #e6b800;
+  }
+  .social-icons a{
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    text-align: center;
+    background: #262626;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 50%;
+    transition: 0.5s;
+  }
+.social-icons a .fa{
+    line-height: 36px;
+  }
+.social-icons a:hover{
+    background: #006080;
+  }
+  .owl-controls {
+    margin-top: 20px;
+  }
+  
+  .owl-pagination {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .owl-page {
+    height: 10px;
+    width: 40px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10%;
+  }
+  
+  .owl-page:hover,
+  .owl-page.active {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  .owl-page:not(first-item) {
+    margin-left: 10px;
+  }
+  
+  
