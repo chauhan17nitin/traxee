@@ -1,12 +1,42 @@
-{% extends 'flipkart/base.html' %}
-{% block body %}
-<div class="albums-container container-fluid">
+{% extends 'flipkart/base.html' %} {% block body %}
 
-    <!-- Handlers -->
-    <div class="row">
-        <div class="text-center">
-            <h3>About traXee</h3>
+<header class="masthead">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-12 text-center">
+                <h1 class="font-weight-light">traXee</h1>
+                <p class="lead">A Smart Ecommerce Product Tracking Tool</p>
+            </div>
+            <section class="py-5">
+                <div class="container text-center">
+                    <h4>Search your favourite products anytime and track it according to your justified price to get notifications</h4>
+                </div>
+            </section><br><br><br><br>
+            <div class="row text-center">
+                <a href="{% url 'flipkart:track' %}" class="btn btn-primary btn-sm" role="button">Your Tracks</a>
+            </div>
         </div>
     </div>
-</div>
+</header>
+<br>
+<br>
+
+<!--<div class="container h-100">
+    <div class="text-center">
+        <section class="py-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4" style="background-color:lavender;">
+                        <h3>Your Tracks</<h3>
+                        <div class="text-center">
+                            <p>See your tracks list here</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-4" ></div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>-->
 {% endblock %}
