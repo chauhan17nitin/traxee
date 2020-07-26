@@ -34,8 +34,8 @@ root = db.reference()
 
 # Credentials header for flipkart api
 HEADERS = {
-    "Fk-Affiliate-Id": "shaikhajw",
-    "Fk-Affiliate-Token": "431799c9268040bebdb683698d6736da"
+    "Fk-Affiliate-Id": "#######",
+    "Fk-Affiliate-Token": "#########"
     }
 
 def signup_email(email_id, name):

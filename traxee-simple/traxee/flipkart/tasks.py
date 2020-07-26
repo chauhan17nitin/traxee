@@ -10,8 +10,8 @@ from django.core.mail import send_mail
 from traxee.settings import EMAIL_HOST_USER
 import time
 HEADERS = {
-            "Fk-Affiliate-Id": "shaikhajw",
-            "Fk-Affiliate-Token": "431799c9268040bebdb683698d6736da"
+            "Fk-Affiliate-Id": "######",
+            "Fk-Affiliate-Token": "######"
             }
 
 from threading import Thread
