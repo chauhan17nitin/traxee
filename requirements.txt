@@ -29,7 +29,7 @@ googleapis-common-protos==1.51.0
 grpcio==1.28.1
 httplib2==0.17.3
 idna==2.9
-ipython==7.14.0
+ipython==7.16.3
 ipython-genutils==0.2.0
 jedi==0.17.0
 kombu==4.6.8
